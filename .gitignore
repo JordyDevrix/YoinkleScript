@@ -1,0 +1,13 @@
+# Ignore Visual Studio Code specific files
+.vscode/
+.vscode/*
+.dist/
+
+# Ignore build directories
+build/
+Build/
+out/
+Out/
+
+# Ignore executable files
+*.exe
