@@ -1,8 +1,9 @@
-void path_variable_scanner() {
-    char *path = getenv("PATH");
-    if (path == NULL) {
-        printf("PATH is not set\n");
-    } else {
-        printf("PATH is %s\n", path);
+#include "common.h"
+
+void path_variable_scanner(int argc, char *argv[]) {
+
+    for (int i = 0; i < argc; i++) {
+        printf("argv[%d] = %s\n", i, argv[i]);
     }
+    return 0;
 }

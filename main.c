@@ -1,10 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "common.h"
 #include "path_variable_scanner.h"
 
-int main() {
-    path_variable_scanner();
+int main(int argc, char *argv[]) {
+    path_variable_scanner(argc, argv);
     
     return 0;
 }
