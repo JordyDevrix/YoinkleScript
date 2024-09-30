@@ -20,10 +20,21 @@ int main(int argc, char *argv[]) {
     printf("The oct value of my_char is: %o\n", my_char);
     printf("The hex value of my_char is: %x\n", my_char);
     printf("The address format value of my_char is: %p\n\n", my_char);
-    
+
     printf("The address of my_char in hex is: %x\n", &my_char);
     printf("The address of my_char in pointer is: %p\n", &my_char);
     printf("The address of my_char in dec is: %d\n", my_char);
+
+    double perimeter, area;
+    double width = atoi(argv[1]);
+    double height = atoi(argv[2]);
+
+    printf("The width is: %lf and the height is: %lf\n", width, height);
+    
+    perimeter = (width + height) * 2;
+    area = width * height;
+    
+    printf("The perimeter is: %lf and the area is: %lf\n", perimeter, area);
 
     return 0;
 } 
