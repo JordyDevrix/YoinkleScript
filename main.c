@@ -36,13 +36,28 @@ int main(int argc, char *argv[]) {
     
     // printf("The perimeter is: %lf and the area is: %lf\n", perimeter, area);
 
-    char mychar[20];
-    fgets(mychar, 20, stdin);
-    printf("The value of mychar is: %s\n", mychar);
-    for (int i = 0; i < strlen(mychar); i++) {
-        printf("The value of mychar[%d] is: %c\n", i, mychar[i]);
-    }
+    // char mychar[20];
+    // fgets(mychar, 20, stdin);
+    // // scanf("%s", mychar);
+    // printf("The value of mychar is: %s\n", mychar);
+    // for (int i = 0; i < strlen(mychar); i++) {
+    //     printf("The value of mychar[%d] is: %c\n", i, mychar[i]);
+    // }
 
+    double minutes;
+    printf("Enter the minutes: ");
+    scanf("%lf", &minutes);
+    printf("The minutes is: %.0lf\n", minutes);
+    
+    int hours, days, years;
+    
+    hours = (int) (minutes / 60);
+    days = (int) (hours / 24);
+    years = (int) (days / 365);
+    printf("The hours is: %d\n", hours);
+    printf("The days is: %d\n", days);
+    printf("The years is: %d\n", years);
 
     return 0;
+
 } 
