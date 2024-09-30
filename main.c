@@ -76,54 +76,78 @@ int main(int argc, char *argv[]) {
     // printf("The size of double is: %lu\n", sizeof(value_g));
     // printf("The size of long double is: %lu\n", sizeof(value_h));
 
-    int hours_of_labor;
-    printf("How many hours of labor: ");
-    scanf("%d", &hours_of_labor);
+    // int hours_of_labor;
+    // printf("How many hours of labor: ");
+    // scanf("%d", &hours_of_labor);
 
-    float pay_rate = 12.00;
-    float overtime = 0;
-    float overtime_pay = 0;
-    float gross_pay = 0;
+    // float pay_rate = 12.00;
+    // float overtime = 0;
+    // float overtime_pay = 0;
+    // float gross_pay = 0;
 
-    if (hours_of_labor > 40) {
-        overtime = (float) (hours_of_labor - 40);
-        overtime_pay = overtime * (pay_rate * 1.5);
+    // if (hours_of_labor > 40) {
+    //     overtime = (float) (hours_of_labor - 40);
+    //     overtime_pay = overtime * (pay_rate * 1.5);
 
-    }
+    // }
 
-    gross_pay = (float) (pay_rate * (hours_of_labor - overtime));
-    float total_pay = (gross_pay + overtime_pay);
+    // gross_pay = (float) (pay_rate * (hours_of_labor - overtime));
+    // float total_pay = (gross_pay + overtime_pay);
     
-    printf("\tYou worked %d hours and the total pay is: $%.2f\n", hours_of_labor, total_pay);
-    printf("\tNormal pay is $%.2f (%d hours) and the overtime pay is: $%.2f (%d hours)\n", gross_pay, (int) (hours_of_labor - overtime), overtime_pay, (int) overtime);
+    // printf("\tYou worked %d hours and the total pay is: $%.2f\n", hours_of_labor, total_pay);
+    // printf("\tNormal pay is $%.2f (%d hours) and the overtime pay is: $%.2f (%d hours)\n", gross_pay, (int) (hours_of_labor - overtime), overtime_pay, (int) overtime);
 
-    float fifteen_percent_tax = 15;
-    float twenty_percent_tax = 20;
-    float twenty_five_percent_tax = 25;
+    // float fifteen_percent_tax = 15;
+    // float twenty_percent_tax = 20;
+    // float twenty_five_percent_tax = 25;
 
-    float net_pay = 0;
+    // float net_pay = 0;
 
-    if (total_pay > (float) 300) {
-        net_pay += 300 - (300 * (fifteen_percent_tax / (float) 100));
-        total_pay -= 300;        
+    // if (total_pay > (float) 300) {
+    //     net_pay += 300 - (300 * (fifteen_percent_tax / (float) 100));
+    //     total_pay -= 300;        
 
-        if (total_pay > (float) 150) {
-            net_pay += 150 - (150 * (twenty_percent_tax / (float) 100));
-            total_pay -= 150;
+    //     if (total_pay > (float) 150) {
+    //         net_pay += 150 - (150 * (twenty_percent_tax / (float) 100));
+    //         total_pay -= 150;
 
-            if (total_pay > (float) 0) {
-                net_pay += total_pay - (total_pay * (twenty_five_percent_tax / (float) 100));
-                total_pay -= total_pay;
-            }
-        } else {
-            net_pay += total_pay - (total_pay * (twenty_percent_tax / (float) 100));
+    //         if (total_pay > (float) 0) {
+    //             net_pay += total_pay - (total_pay * (twenty_five_percent_tax / (float) 100));
+    //             total_pay -= total_pay;
+    //         }
+    //     } else {
+    //         net_pay += total_pay - (total_pay * (twenty_percent_tax / (float) 100));
+    //     }
+    // } else {
+    //     net_pay = total_pay - (total_pay * (fifteen_percent_tax / (float) 100));
+    // }
+    
+    // printf("\tThe net pay is: $%.2f\n", net_pay);
+    srand(time(NULL));
+    rand();
+    int r = rand() % 20 + 1;
+
+    int guesses_used = 0;
+    printf("You have 5 guesses\n");
+    while (guesses_used != 5) {
+        int guessing_number;
+        printf("Enter your guess: ");
+        scanf("%d", &guessing_number);
+
+        if (guessing_number == r) {
+            printf("You guessed the number correctly\n");
+            break;
+        } else if (guessing_number > r) {
+            guesses_used += 1;
+            printf("You guessed too high\n\nYou have %d guesses left\n", (5 - guesses_used));
+            continue;
+        } else if (guessing_number < r) {
+            guesses_used += 1;
+            printf("You guessed too low\n\nYou have %d guesses left\n", (5 - guesses_used));
+            continue;
         }
-    } else {
-        net_pay = total_pay - (total_pay * (fifteen_percent_tax / (float) 100));
-    }
-    
-    printf("\tThe net pay is: $%.2f\n", net_pay);
 
+    }
 
 
     return 0;
