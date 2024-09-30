@@ -3,11 +3,10 @@
 
 int main(int argc, char *argv[]) {
     // path_variable_scanner(argc, argv);
-    
-    enum prime_color {red, yellow, blue};
-    enum prime_color my_color, gregs_color;
-    my_color = three;
-    gregs_color = red;
-    
+    enum debug {true, false};
+    enum debug set_debug;
+    set_debug = true;
+    printf("set_debug = %d\n", set_debug);
+
     return 0;
-}
+} 
