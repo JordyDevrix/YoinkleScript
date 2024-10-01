@@ -44,6 +44,7 @@ int main(int argc, char *argv[]) {
     //     printf("The value of mychar[%d] is: %c\n", i, mychar[i]);
     // }
 
+
     // double minutes;
     // printf("Enter the minutes: ");
     // scanf("%lf", &minutes);
@@ -57,6 +58,7 @@ int main(int argc, char *argv[]) {
     // printf("The hours is: %d\n", hours);
     // printf("The days is: %d\n", days);
     // printf("The years is: %d\n\n", years);
+
 
     // int value_a;
     // char value_b;
@@ -75,6 +77,7 @@ int main(int argc, char *argv[]) {
     // printf("The size of long long is: %lu\n", sizeof(value_f));
     // printf("The size of double is: %lu\n", sizeof(value_g));
     // printf("The size of long double is: %lu\n", sizeof(value_h));
+
 
     // int hours_of_labor;
     // printf("How many hours of labor: ");
@@ -123,31 +126,75 @@ int main(int argc, char *argv[]) {
     // }
     
     // printf("\tThe net pay is: $%.2f\n", net_pay);
-    srand(time(NULL));
-    rand();
-    int r = rand() % 20 + 1;
 
-    int guesses_used = 0;
-    printf("You have 5 guesses\n");
-    while (guesses_used != 5) {
-        int guessing_number;
-        printf("Enter your guess: ");
-        scanf("%d", &guessing_number);
 
-        if (guessing_number == r) {
-            printf("You guessed the number correctly\n");
-            break;
-        } else if (guessing_number > r) {
-            guesses_used += 1;
-            printf("You guessed too high\n\nYou have %d guesses left\n", (5 - guesses_used));
-            continue;
-        } else if (guessing_number < r) {
-            guesses_used += 1;
-            printf("You guessed too low\n\nYou have %d guesses left\n", (5 - guesses_used));
-            continue;
-        }
+    // srand(time(NULL));
+    // rand();
+    // int r = rand() % 20 + 1;
 
+    // int guesses_used = 0;
+    // printf("You have 5 guesses\n");
+    // while (guesses_used != 5) {
+    //     int guessing_number;
+    //     printf("Enter your guess: ");
+    //     scanf("%d", &guessing_number);
+
+    //     if (guessing_number == r) {
+    //         printf("You guessed the number correctly\n");
+    //         break;
+    //     } else if (guessing_number > r) {
+    //         guesses_used += 1;
+    //         printf("You guessed too high\n\nYou have %d guesses left\n", (5 - guesses_used));
+    //         continue;
+    //     } else if (guessing_number < r) {
+    //         guesses_used += 1;
+    //         printf("You guessed too low\n\nYou have %d guesses left\n", (5 - guesses_used));
+    //         continue;
+    //     }
+
+    // }
+
+
+    int diddy_party = 1337;
+    int *location_of_diddy_party = &diddy_party;
+    printf("The value of diddy_party is: %d\n", diddy_party);
+    printf("The location of the diddy_party is: %p\n\n", location_of_diddy_party);
+    
+    int favo_variable = 1337;
+    int *p_favo_variable = &favo_variable;
+    // *p_favo_variable = 3333;
+    favo_variable = 3336;
+
+    int *array_of_pointers[2] = { p_favo_variable, location_of_diddy_party };
+    for (int i = 0; i < 2; i++) {
+        printf("The value of array_of_pointers[%d] is: %p\nAnd the value %d\n", i, array_of_pointers[i], *array_of_pointers[i]);
     }
+
+    // value of what the pointer is pointing to
+    printf("The value of favo_variable is: %d\n", favo_variable);
+    
+    // Value of the pointer
+    printf("The location of favo_variable is: %p\n", p_favo_variable);
+    
+    // Address of the pointer
+    printf("The value of favo_variable is: %p\n\n", &p_favo_variable);
+
+    enum bools { true=1, false=0 };
+    enum bools ast = true;
+    enum bools debug = false;
+    enum bools test = true;
+    enum bools version = false;
+
+    int array_of_wheels[] = { ast, debug, test, version };
+    // the length of the array
+    int array_size = (int) (sizeof(array_of_wheels) / sizeof(array_of_wheels[0]));
+    for (int i = 0; i < array_size; i++) {
+        printf("The value of array_of_wheels[%d] is: %d\n", i, array_of_wheels[i]);
+    }
+
+    int a[5] = {1, 2, 3, 4, 5};
+    int *p = a;
+    printf("%d\t%d\t%d\t%d\t", *p, a[0], a, p);
 
 
     return 0;
