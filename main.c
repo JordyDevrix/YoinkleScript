@@ -247,69 +247,105 @@ int main(int argc, char *argv[]) {
     // free(new_str);
 
 
-    struct interior {
-        int seats;
-        int doors;
-        int wheels;
-    };
+    // struct interior {
+    //     int seats;
+    //     int doors;
+    //     int wheels;
+    // };
 
-    struct statistics {
-        int max_speed;
-        int weight;
-        int *gear_ratios;
-        int gear_ratio_count;
-    };
+    // struct statistics {
+    //     int max_speed;
+    //     int weight;
+    //     int *gear_ratios;
+    //     int gear_ratio_count;
+    // };
 
-    struct car {
-        struct interior car_interior;
-        struct statistics car_statistics;
-    };
+    // struct car {
+    //     struct interior car_interior;
+    //     struct statistics car_statistics;
+    // };
     
-    typedef struct car car_t;
+    // typedef struct car car_t;
 
-    // first car
+    // // first car
 
-    car_t my_first_car;
-    my_first_car.car_interior.seats = 5;
-    my_first_car.car_interior.doors = 5;
-    my_first_car.car_interior.wheels = 4;
-    my_first_car.car_statistics.max_speed = 200;
-    my_first_car.car_statistics.weight = 2000;
+    // car_t my_first_car;
+    // my_first_car.car_interior.seats = 5;
+    // my_first_car.car_interior.doors = 5;
+    // my_first_car.car_interior.wheels = 4;
+    // my_first_car.car_statistics.max_speed = 200;
+    // my_first_car.car_statistics.weight = 2000;
 
-    int gear_ratios_first_car[] = {1, 2, 3, 4};
-    int size_of_gear_ratios1 = sizeof(gear_ratios_first_car) / sizeof(gear_ratios_first_car[0]);
-    my_first_car.car_statistics.gear_ratio_count = size_of_gear_ratios1;
+    // int gear_ratios_first_car[] = {1, 2, 3, 4};
+    // int size_of_gear_ratios1 = sizeof(gear_ratios_first_car) / sizeof(gear_ratios_first_car[0]);
+    // my_first_car.car_statistics.gear_ratio_count = size_of_gear_ratios1;
 
-    my_first_car.car_statistics.gear_ratios = (int *) malloc(size_of_gear_ratios1 * sizeof(int));
-    my_first_car.car_statistics.gear_ratios = gear_ratios_first_car;
+    // my_first_car.car_statistics.gear_ratios = (int *) malloc(size_of_gear_ratios1 * sizeof(int));
+    // my_first_car.car_statistics.gear_ratios = gear_ratios_first_car;
 
-    // second car
+    // // second car
 
-    car_t my_second_car;
-    my_second_car.car_interior.seats = 2;
-    my_second_car.car_interior.doors = 3;
-    my_second_car.car_interior.wheels = 4;
-    my_first_car.car_statistics.max_speed = 200;
-    my_first_car.car_statistics.weight = 2000;
+    // car_t my_second_car;
+    // my_second_car.car_interior.seats = 2;
+    // my_second_car.car_interior.doors = 3;
+    // my_second_car.car_interior.wheels = 4;
+    // my_first_car.car_statistics.max_speed = 200;
+    // my_first_car.car_statistics.weight = 2000;
 
-    int gear_ratios_second_car[] = {2, 4, 6, 8, 10, 12};
-    int size_of_gear_ratios = sizeof(gear_ratios_second_car) / sizeof(gear_ratios_second_car[0]);
-    my_second_car.car_statistics.gear_ratio_count = size_of_gear_ratios;
+    // int gear_ratios_second_car[] = {2, 4, 6, 8, 10, 12};
+    // int size_of_gear_ratios = sizeof(gear_ratios_second_car) / sizeof(gear_ratios_second_car[0]);
+    // my_second_car.car_statistics.gear_ratio_count = size_of_gear_ratios;
 
-    my_second_car.car_statistics.gear_ratios = (int *) malloc(size_of_gear_ratios * sizeof(int));
-    my_second_car.car_statistics.gear_ratios = gear_ratios_second_car;
+    // my_second_car.car_statistics.gear_ratios = (int *) malloc(size_of_gear_ratios * sizeof(int));
+    // my_second_car.car_statistics.gear_ratios = gear_ratios_second_car;
 
-    // make a list of cars
+    // // make a list of cars
 
-    car_t car_list[] = { my_first_car, my_second_car };
+    // car_t car_list[] = { my_first_car, my_second_car };
 
-    for (int i = 0; i < 2; i++) {
-        printf("The value of car_list[%d] is: %d\n", i, car_list[i].car_interior.seats);
+    // for (int i = 0; i < 2; i++) {
+    //     printf("The value of car_list[%d] is: %d\n", i, car_list[i].car_interior.seats);
         
-        for (int j = 0; j < car_list[i].car_statistics.gear_ratio_count; j++) {
-            printf("The value of car_list[%d].car_statistics.gear_ratios[%d] is: %d\n", i, j, car_list[i].car_statistics.gear_ratios[j]);
-        }
+    //     for (int j = 0; j < car_list[i].car_statistics.gear_ratio_count; j++) {
+    //         printf("The value of car_list[%d].car_statistics.gear_ratios[%d] is: %d\n", i, j, car_list[i].car_statistics.gear_ratios[j]);
+    //     }
+    // }
+
+    FILE *p_file;
+    int c;
+    char *filecontent = NULL;
+
+    p_file = fopen("main.ys", "r");
+
+    if(p_file == NULL) {
+        perror("Error in opening file");
+        return(-1);
     }
+
+    int i = 0;
+    filecontent = (char *) malloc(0 * sizeof(char));
+    while((c = fgetc(p_file)) != EOF) {
+        if (c == '\n') {
+            continue;
+        }
+        if (c == ' ') {
+            continue;
+        }
+
+        filecontent = realloc(filecontent, (i+1) * sizeof(char));
+        if (filecontent == NULL) {
+            perror("Error in allocating memory");
+            return(-1);
+        }
+        filecontent[i] = c;
+        i++;
+    }
+    fclose(p_file);
+
+    filecontent[i] = '\0';
+
+    printf("The content of the file is: %s\n", filecontent);
+    
 
 
     return 0;
