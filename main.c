@@ -155,47 +155,95 @@ int main(int argc, char *argv[]) {
     // }
 
 
-    int diddy_party = 1337;
-    int *location_of_diddy_party = &diddy_party;
-    printf("The value of diddy_party is: %d\n", diddy_party);
-    printf("The location of the diddy_party is: %p\n\n", location_of_diddy_party);
+    // int diddy_party = 1337;
+    // int *location_of_diddy_party = &diddy_party;
+    // printf("The value of diddy_party is: %d\n", diddy_party);
+    // printf("The location of the diddy_party is: %p\n\n", location_of_diddy_party);
     
-    int favo_variable = 1337;
-    int *p_favo_variable = &favo_variable;
-    // *p_favo_variable = 3333;
-    favo_variable = 3336;
+    // int favo_variable = 1337;
+    // int *p_favo_variable = &favo_variable;
+    // // *p_favo_variable = 3333;
+    // favo_variable = 3336;
 
-    int *array_of_pointers[2] = { p_favo_variable, location_of_diddy_party };
-    for (int i = 0; i < 2; i++) {
-        printf("The value of array_of_pointers[%d] is: %p\nAnd the value %d\n", i, array_of_pointers[i], *array_of_pointers[i]);
+    // int *array_of_pointers[2] = { p_favo_variable, location_of_diddy_party };
+    // for (int i = 0; i < 2; i++) {
+    //     printf("The value of array_of_pointers[%d] is: %p\nAnd the value %d\n", i, array_of_pointers[i], *array_of_pointers[i]);
+    // }
+
+    // // value of what the pointer is pointing to
+    // printf("The value of favo_variable is: %d\n", favo_variable);
+    
+    // // Value of the pointer
+    // printf("The location of favo_variable is: %p\n", p_favo_variable);
+    
+    // // Address of the pointer
+    // printf("The value of favo_variable is: %p\n\n", &p_favo_variable);
+
+    // enum bools { true=1, false=0 };
+    // enum bools ast = true;
+    // enum bools debug = false;
+    // enum bools test = true;
+    // enum bools version = false;
+
+    // int array_of_wheels[] = { ast, debug, test, version };
+    // // the length of the array
+    // int array_size = (int) (sizeof(array_of_wheels) / sizeof(array_of_wheels[0]));
+    // for (int i = 0; i < array_size; i++) {
+    //     printf("The value of array_of_wheels[%d] is: %d\n", i, array_of_wheels[i]);
+    // }
+
+    // int a[5] = {1, 2, 3, 4, 5};
+    // int *p = a;
+    // printf("%d\t%d\t%d\t%d\t", *p, a[0], a, p);
+
+    // Creating a pointer of type string and assinging NULL to it
+    char *str = NULL;
+
+    // Allocating memory for 15 characters and assigning the address to str
+    str = (char *) malloc(1 * sizeof(char));
+
+    // Copying a string into the allocated memory and overwriting the address with another strcpy
+    char my_str[] = "0987654321";
+
+    // should be 11 because the string lenght is 10 and the null character will be added at the end
+    int str_len = sizeof(my_str) / sizeof(my_str[0]);
+    printf("Size of my_str: %d\n", str_len);
+    str = (char *) malloc(str_len * sizeof(char));
+
+    strcpy(str, my_str);
+
+    // Printing the string and its address
+    printf("String = %s, Address = %p\n", str, str);
+
+    // Freeing the memory that was allocated for the string and assigning NULL to the pointer
+    free(str);
+    str = NULL;
+
+    // Checking if the memory was freed
+    printf("String = %s, Address = %p\n", str, str);
+
+    char *new_str = (char *) malloc(20 * sizeof(char));
+    scanf("%s", new_str);
+    printf("The value of str is: %s\n", new_str);
+
+    for (int i = 0; i < strlen(new_str); i++) {
+        printf("The value of new_str[%d] is: %c\n", i, new_str[i]);
     }
 
-    // value of what the pointer is pointing to
-    printf("The value of favo_variable is: %d\n", favo_variable);
-    
-    // Value of the pointer
-    printf("The location of favo_variable is: %p\n", p_favo_variable);
-    
-    // Address of the pointer
-    printf("The value of favo_variable is: %p\n\n", &p_favo_variable);
-
-    enum bools { true=1, false=0 };
-    enum bools ast = true;
-    enum bools debug = false;
-    enum bools test = true;
-    enum bools version = false;
-
-    int array_of_wheels[] = { ast, debug, test, version };
-    // the length of the array
-    int array_size = (int) (sizeof(array_of_wheels) / sizeof(array_of_wheels[0]));
-    for (int i = 0; i < array_size; i++) {
-        printf("The value of array_of_wheels[%d] is: %d\n", i, array_of_wheels[i]);
+    char new_string_two[] = "helloworld";
+    for (int i = 0; i < sizeof(new_string_two); i++) {
+        printf("The value of new_string_two[%d] is: %c\n", i, new_string_two[i]);
     }
 
-    int a[5] = {1, 2, 3, 4, 5};
-    int *p = a;
-    printf("%d\t%d\t%d\t%d\t", *p, a[0], a, p);
+    printf("POINTER\tThe sizeof new_str is: %lu and strlen of new_str is: %d\n", sizeof(new_str), strlen(new_str));
+    printf("STATIC\tThe sizeof new_string_two is: %lu and strlen of new_string_two is: %d\n", sizeof(new_string_two), strlen(new_string_two));
+    /* 
+    if both strings are the same, then strlen will be the same too, but sizeof will be different
+    thats because in the first case we are printing the sizeof the pointer which for the 64 bit compiler will return 8
+    and in the second case we are printing the sizeof the array which will return the length of the array plus the null character
+    */
 
+    free(new_str);
 
     return 0;
 
