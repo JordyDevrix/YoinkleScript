@@ -196,54 +196,121 @@ int main(int argc, char *argv[]) {
     // int *p = a;
     // printf("%d\t%d\t%d\t%d\t", *p, a[0], a, p);
 
-    // Creating a pointer of type string and assinging NULL to it
-    char *str = NULL;
 
-    // Allocating memory for 15 characters and assigning the address to str
-    str = (char *) malloc(1 * sizeof(char));
+    // // Creating a pointer of type string and assinging NULL to it
+    // char *str = NULL;
 
-    // Copying a string into the allocated memory and overwriting the address with another strcpy
-    char my_str[] = "0987654321";
+    // // Allocating memory for 15 characters and assigning the address to str
+    // str = (char *) malloc(1 * sizeof(char));
 
-    // should be 11 because the string lenght is 10 and the null character will be added at the end
-    int str_len = sizeof(my_str) / sizeof(my_str[0]);
-    printf("Size of my_str: %d\n", str_len);
-    str = (char *) malloc(str_len * sizeof(char));
+    // // Copying a string into the allocated memory and overwriting the address with another strcpy
+    // char my_str[] = "0987654321";
 
-    strcpy(str, my_str);
+    // // should be 11 because the string lenght is 10 and the null character will be added at the end
+    // int str_len = sizeof(my_str) / sizeof(my_str[0]);
+    // printf("Size of my_str: %d\n", str_len);
+    // str = (char *) malloc(str_len * sizeof(char));
 
-    // Printing the string and its address
-    printf("String = %s, Address = %p\n", str, str);
+    // strcpy(str, my_str);
 
-    // Freeing the memory that was allocated for the string and assigning NULL to the pointer
-    free(str);
-    str = NULL;
+    // // Printing the string and its address
+    // printf("String = %s, Address = %p\n", str, str);
 
-    // Checking if the memory was freed
-    printf("String = %s, Address = %p\n", str, str);
+    // // Freeing the memory that was allocated for the string and assigning NULL to the pointer
+    // free(str);
+    // str = NULL;
 
-    char *new_str = (char *) malloc(20 * sizeof(char));
-    scanf("%s", new_str);
-    printf("The value of str is: %s\n", new_str);
+    // // Checking if the memory was freed
+    // printf("String = %s, Address = %p\n", str, str);
 
-    for (int i = 0; i < strlen(new_str); i++) {
-        printf("The value of new_str[%d] is: %c\n", i, new_str[i]);
+    // char *new_str = (char *) malloc(20 * sizeof(char));
+    // scanf("%s", new_str);
+    // printf("The value of str is: %s\n", new_str);
+
+    // for (int i = 0; i < strlen(new_str); i++) {
+    //     printf("The value of new_str[%d] is: %c\n", i, new_str[i]);
+    // }
+
+    // char new_string_two[] = "helloworld";
+    // for (int i = 0; i < sizeof(new_string_two); i++) {
+    //     printf("The value of new_string_two[%d] is: %c\n", i, new_string_two[i]);
+    // }
+
+    // printf("POINTER\tThe sizeof new_str is: %lu and strlen of new_str is: %d\n", sizeof(new_str), strlen(new_str));
+    // printf("STATIC\tThe sizeof new_string_two is: %lu and strlen of new_string_two is: %d\n\n", sizeof(new_string_two), strlen(new_string_two));
+    // /* 
+    // if both strings are the same, then strlen will be the same too, but sizeof will be different
+    // thats because in the first case we are printing the sizeof the pointer which for the 64 bit compiler will return 8
+    // and in the second case we are printing the sizeof the array which will return the length of the array plus the null character
+    // */
+
+    // free(new_str);
+
+
+    struct interior {
+        int seats;
+        int doors;
+        int wheels;
+    };
+
+    struct statistics {
+        int max_speed;
+        int weight;
+        int *gear_ratios;
+        int gear_ratio_count;
+    };
+
+    struct car {
+        struct interior car_interior;
+        struct statistics car_statistics;
+    };
+    
+    typedef struct car car_t;
+
+    // first car
+
+    car_t my_first_car;
+    my_first_car.car_interior.seats = 5;
+    my_first_car.car_interior.doors = 5;
+    my_first_car.car_interior.wheels = 4;
+    my_first_car.car_statistics.max_speed = 200;
+    my_first_car.car_statistics.weight = 2000;
+
+    int gear_ratios_first_car[] = {1, 2, 3, 4};
+    int size_of_gear_ratios1 = sizeof(gear_ratios_first_car) / sizeof(gear_ratios_first_car[0]);
+    my_first_car.car_statistics.gear_ratio_count = size_of_gear_ratios1;
+
+    my_first_car.car_statistics.gear_ratios = (int *) malloc(size_of_gear_ratios1 * sizeof(int));
+    my_first_car.car_statistics.gear_ratios = gear_ratios_first_car;
+
+    // second car
+
+    car_t my_second_car;
+    my_second_car.car_interior.seats = 2;
+    my_second_car.car_interior.doors = 3;
+    my_second_car.car_interior.wheels = 4;
+    my_first_car.car_statistics.max_speed = 200;
+    my_first_car.car_statistics.weight = 2000;
+
+    int gear_ratios_second_car[] = {2, 4, 6, 8, 10, 12};
+    int size_of_gear_ratios = sizeof(gear_ratios_second_car) / sizeof(gear_ratios_second_car[0]);
+    my_second_car.car_statistics.gear_ratio_count = size_of_gear_ratios;
+
+    my_second_car.car_statistics.gear_ratios = (int *) malloc(size_of_gear_ratios * sizeof(int));
+    my_second_car.car_statistics.gear_ratios = gear_ratios_second_car;
+
+    // make a list of cars
+
+    car_t car_list[] = { my_first_car, my_second_car };
+
+    for (int i = 0; i < 2; i++) {
+        printf("The value of car_list[%d] is: %d\n", i, car_list[i].car_interior.seats);
+        
+        for (int j = 0; j < car_list[i].car_statistics.gear_ratio_count; j++) {
+            printf("The value of car_list[%d].car_statistics.gear_ratios[%d] is: %d\n", i, j, car_list[i].car_statistics.gear_ratios[j]);
+        }
     }
 
-    char new_string_two[] = "helloworld";
-    for (int i = 0; i < sizeof(new_string_two); i++) {
-        printf("The value of new_string_two[%d] is: %c\n", i, new_string_two[i]);
-    }
-
-    printf("POINTER\tThe sizeof new_str is: %lu and strlen of new_str is: %d\n", sizeof(new_str), strlen(new_str));
-    printf("STATIC\tThe sizeof new_string_two is: %lu and strlen of new_string_two is: %d\n", sizeof(new_string_two), strlen(new_string_two));
-    /* 
-    if both strings are the same, then strlen will be the same too, but sizeof will be different
-    thats because in the first case we are printing the sizeof the pointer which for the 64 bit compiler will return 8
-    and in the second case we are printing the sizeof the array which will return the length of the array plus the null character
-    */
-
-    free(new_str);
 
     return 0;
 
