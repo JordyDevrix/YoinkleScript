@@ -14,13 +14,17 @@ int main(int argc, char *argv[]) {
             "  -t: Add behind your script to view the tokens\n"
             "  -a: Add behind your script to view abstract syntax tree\n"
         );
+        exit(0);
     }
 
     if (my_flags->version) {
         printf("Version: 02/10/2024 v0.0.1 pre-alpha\n");
+        exit(0);
     }
 
-    
+    if (my_flags->file_path) {
+        
+    }
 
     if (my_flags->tokens) {
         printf("Tokens\n");

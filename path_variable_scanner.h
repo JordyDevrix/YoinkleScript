@@ -64,6 +64,24 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 break;
             }
         } else {
+            if (ptr_program_flags->file_path != NULL) {
+                printf("");
+
+                int space_length = 35;
+                int argument_length = strlen(argument);
+                char *error_line = malloc(sizeof(char) * (space_length + argument_length + 1));
+
+                for (int i = 0; i < space_length; i++) {
+                    error_line[i] = ' ';
+                }
+                for (int i = 0; i < argument_length; i++) {
+                    error_line[space_length + i] = '^';
+                }
+                error_line[space_length + argument_length] = '\0';
+                
+                printf("One or multiple unknown arguments: %s\n%s\n", argument, error_line);
+                exit(1);
+            }
             ptr_program_flags->file_path = argument;
         }
     }
