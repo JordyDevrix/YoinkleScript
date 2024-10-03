@@ -6,11 +6,11 @@
 #define KEYWORDS {"if", "else"}
 
 typedef enum {
+    TOKEN_NULL,
     TOKEN_STRING,
     TOKEN_INTEGER,
     TOKEN_FLOAT,
     TOKEN_BOOLEAN,
-    TOKEN_NULL,
     TOKEN_IDENTIFIER,
     TOKEN_KEYWORD,
     TOKEN_OPERATOR,
@@ -23,7 +23,7 @@ typedef struct {
     char *value;
 } Token;
 
-int *tokenize_code(char *p_code) {
+Token *tokenize_code(char *p_code) {
     Token *token_list = (Token *) malloc(sizeof(Token));
     if (token_list == NULL) {
         printf("Memory allocation failed\n");
@@ -60,20 +60,6 @@ int *tokenize_code(char *p_code) {
             {
                 i++;
             }
-            continue;
-        }
-
-        // Checking for comparators
-        if (p_code[i] == '=' && p_code[i + 1] == '=')
-        {
-            TokenType token_type = TOKEN_COMPARATOR;
-            char *token_value = "==";
-
-            token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
-            token_list[token_count] = (Token) { token_type, token_value };
-            token_count++;
-
-            i += 2;
             continue;
         }
 
@@ -158,14 +144,11 @@ int *tokenize_code(char *p_code) {
             i++;
             continue;
         }
-        
-
         i++;
-
     }
+    token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+    token_list[token_count] = (Token) { TOKEN_NULL, NULL };
+    token_count++;
 
-    for (int i = 0; i < token_count; i++) {
-        printf("Token type %d\t token value %s\n", token_list[i].type, token_list[i].value);
-    }
-
+    return token_list;
 }
