@@ -1,10 +1,9 @@
-
 # YoinkleScript code here
 
 answer = read("Did bob built something?: ");
 bob_built_something = answer;
 
-if (bob_built_something) {
+if (bob_built_something == True) {
     build = read("What did bob build?: ");
     big = read("Is the thing that bob built big?: ");
     if (big) {
