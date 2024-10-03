@@ -1,4 +1,5 @@
-# YoinkleScript code here
+YoinkleScript code here
+
 
 answer = read("Did bob built something?: ");
 bob_built_something = answer;
