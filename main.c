@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
             free(my_flags);
             exit(1);
         }
+        printf("The content of the file is: %s\n", p_code);
     }
 
     if (my_flags->tokens) {
