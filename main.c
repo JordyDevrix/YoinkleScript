@@ -20,9 +20,7 @@ int main(int argc, char *argv[]) {
         printf("Version: 02/10/2024 v0.0.1 pre-alpha\n");
     }
 
-    if (my_flags->debug) {
-        printf("Debug\n");
-    }
+    
 
     if (my_flags->tokens) {
         printf("Tokens\n");
@@ -31,6 +29,8 @@ int main(int argc, char *argv[]) {
     if (my_flags->ast) {
         printf("Abstract Syntax Tree\n");
     }
+
+    free(my_flags);
 
     return 0;
 } 

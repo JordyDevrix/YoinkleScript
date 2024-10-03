@@ -32,7 +32,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 ptr_program_flags->help = 1;
                 return ptr_program_flags;
             }
-            else if (strcmp(argument, "-v" || strcmp(argument, "--version")) == 0) {
+            else if (strcmp(argument, "-v") == 0 || strcmp(argument, "--version") == 0) {
                 ptr_program_flags->version = 1;
                 return ptr_program_flags;
             }
