@@ -1,6 +1,8 @@
 #include "common.h"
+
 #include "path_variable_scanner.h"
 #include "file_reader.h"
+#include "tokenizer.h"
 
 int main(int argc, char *argv[]) {
     
@@ -31,16 +33,18 @@ int main(int argc, char *argv[]) {
             free(my_flags);
             exit(1);
         }
-        printf("The content of the file is: %s\n", p_code);
+
+        tokenize_code(p_code);
+
+        if (my_flags->tokens) {
+            printf("Tokens\n");
+        }
+
+        if (my_flags->ast) {
+            printf("Abstract Syntax Tree\n");
+        }
     }
 
-    if (my_flags->tokens) {
-        printf("Tokens\n");
-    }
-
-    if (my_flags->ast) {
-        printf("Abstract Syntax Tree\n");
-    }
 
     free(my_flags);
 

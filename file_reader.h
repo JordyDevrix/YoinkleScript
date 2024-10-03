@@ -14,9 +14,6 @@ char *file_reader(char *file_path) {
     file_content = (char *) malloc(0 * sizeof(char));
     while ((c = fgetc(p_file)) != EOF)
     {
-        if (c == '\n') {
-            continue;
-        }
         file_content = realloc(file_content, (i + 1) * sizeof(char));
         if (file_content == NULL) {
             printf("Memory allocation failed\n");
