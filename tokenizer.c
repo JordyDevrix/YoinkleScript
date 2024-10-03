@@ -35,6 +35,9 @@ Token *tokenize_code(char *p_code) {
     int code_length = strlen(p_code);
     int i = 0;
 
+    const char *comparators[] = COMPARATORS;
+    int n_comparators = sizeof(comparators) / sizeof(comparators[0]);
+
     while (i < code_length)
     {   
         // printf("The value of p_code[%d] is: %c (%d)\n", i, p_code[i], p_code[i]);
@@ -61,6 +64,53 @@ Token *tokenize_code(char *p_code) {
                 i++;
             }
             continue;
+        }
+
+        // Checking for doublecharacter comparators in COMPARATORS list
+        for (int j = 0; j < n_comparators; j++)
+        {
+            // printf("Comparing %c%c with %s\n", p_code[i], p_code[i + 1], comparators[j]);
+
+            char current_double_string[3] = { p_code[i], p_code[i + 1], '\0' };
+
+            if (strcmp(current_double_string, comparators[j]) == 0)
+            {
+                TokenType token_type = TOKEN_COMPARATOR;
+                char *token_value = (char *) malloc(3 * sizeof(char));
+                token_value[0] = p_code[i];
+                token_value[1] = p_code[i + 1];
+                token_value[2] = '\0';
+
+                token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+                token_list[token_count] = (Token) { token_type, token_value };
+                token_count++;
+
+                i += 2;
+                continue;
+            } 
+        }
+
+        // Checking for single character comparators in COMPARATORS list
+        for (int j = 0; j < n_comparators; j++)
+        {
+            // printf("Comparing %c%c with %s\n", p_code[i], p_code[i + 1], comparators[j]);
+
+            char current_single_string[2] = { p_code[i], '\0' };
+
+            if (strcmp(current_single_string, comparators[j]) == 0)
+            {
+                TokenType token_type = TOKEN_COMPARATOR;
+                char *token_value = (char *) malloc(3 * sizeof(char));
+                token_value[0] = p_code[i];
+                token_value[1] = '\0';
+
+                token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+                token_list[token_count] = (Token) { token_type, token_value };
+                token_count++;
+
+                i += 1;
+                continue;
+            } 
         }
 
         // Checking for symbols
