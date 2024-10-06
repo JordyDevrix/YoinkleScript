@@ -13,11 +13,13 @@ int main(int argc, char *argv[]) {
     if (my_flags->help) {
         printf(
             "Help\n"
-            "  -h: Display this help message\n"
-            "  -v: Display the version\n"
-            "  -d: Add behind your script to run in debug\n"
+            "  -h | --help: Display this help message\n"
+            "  -v | --version: Display the version\n"
+            "  -d | --debug: Add behind your script to run in debug\n"
             "  -t: Add behind your script to view the tokens\n"
             "  -a: Add behind your script to view abstract syntax tree\n"
+            "  -f: Add behind your script to view the file path\n"
+            "  -c: Add behind your script to view the code\n"
         );
         free(my_flags);
         exit(0);
@@ -32,10 +34,23 @@ int main(int argc, char *argv[]) {
 
     // Reading the file_path argument and getting the file contents
     if (my_flags->file_path) {
+        // Printing the file path when the -f flag is set
+        if (my_flags->file) {
+            printf("v v v FILE v v v\n");
+            printf("%s\n", my_flags->file_path);
+        }
+
+        // Reading the file contents and checking if the file exists
         char *p_code = file_reader(my_flags->file_path);
         if (p_code == NULL) {
             free(my_flags);
             exit(1);
+        }
+
+        // Printing the code when the -c flag is set
+        if (my_flags->code) {
+            printf("v v v CODE v v v\n");
+            printf("%s\n", p_code);
         }
 
         // Tokenizing the code and optionally printing the tokens when the -t flag is set
@@ -48,6 +63,7 @@ int main(int argc, char *argv[]) {
 
         // Checking if the tokens flag has been set to 1 and printing the tokens
         if (my_flags->tokens) {
+            printf("v v v TOKENS v v v\n");
             int i = 0;
             for (int i = 0; p_tokens[i].type != TOKEN_NULL; i++) {
 
@@ -87,7 +103,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (my_flags->ast) {
-            printf("Abstract Syntax Tree\n");
+            printf("v v v ABSTRACT SYNTAX TREE v v v\n");
         }
     }
 

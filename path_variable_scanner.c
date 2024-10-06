@@ -3,9 +3,10 @@
 typedef struct {
     int help;
     int version;
-    int debug;
     int tokens;
     int ast;
+    int file;
+    int code;
     char *file_path;
 } flags;
 
@@ -17,7 +18,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
         exit(1);
     }
 
-    *ptr_program_flags = (flags) { 0, 0, 0, 0, 0, NULL };
+    *ptr_program_flags = (flags) { 0, 0, 0, 0, 0, 0, NULL };
 
     for (int i = 0; i < argc; i++) {
         char *argument = argv[i];
@@ -36,14 +37,22 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 ptr_program_flags->version = 1;
                 return ptr_program_flags;
             }
-            else if (strcmp(argument, "-d") == 0) {
-                ptr_program_flags->debug = 1;
-            }
             else if (strcmp(argument, "-t") == 0) {
                 ptr_program_flags->tokens = 1;
             }
             else if (strcmp(argument, "-a") == 0) {
                 ptr_program_flags->ast = 1;
+            }
+            else if (strcmp(argument, "-f") == 0) {
+                ptr_program_flags->file = 1;
+            }
+            else if (strcmp(argument, "-c") == 0) {
+                ptr_program_flags->code = 1;
+            }
+            else if ((strcmp(argument, "-d") == 0) || (strcmp(argument, "--debug") == 0)) {
+                ptr_program_flags->ast = 1;
+                ptr_program_flags->tokens = 1;
+                ptr_program_flags->file = 1;                
             } else {
                 printf("");
 
@@ -60,6 +69,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 error_line[space_length + argument_length] = '\0';
                 
                 printf("Unkown flag: %s\n%s\n", argument, error_line);
+                printf("Use -h or --help to view the help message\n");
                 exit(1);
                 break;
             }
@@ -78,6 +88,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 }
                 error_line[space_length + argument_length] = '\0';
                 printf("One or multiple unknown arguments: %s\n%s\n", argument, error_line);
+                printf("Use -h or --help to view the help message\n");
                 free(ptr_program_flags);
                 exit(1);
             }
@@ -97,6 +108,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 error_line[space_length + argument_length] = '\0';
                 
                 printf("File cannot be read: %s (File might not be a YoinkleScript file)\n%s\n", argument, error_line);
+                printf("Use -h or --help to view the help message\n");
                 free(ptr_program_flags);
                 exit(1);
             }

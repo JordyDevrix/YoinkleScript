@@ -56,13 +56,25 @@ Token *tokenize_code(char *p_code) {
             continue;
         }
 
-        // Removing comments
-        if (p_code[i] == '#')
+        // Removing singleline comments
+        if (p_code[i] == '#' && p_code[i + 1] == '#')
         {
             while (p_code[i] != '\n')
             {
                 i++;
             }
+            continue;
+        }
+
+        // Removing multiline comments
+        if (p_code[i] == '#')
+        {
+            i++;
+            while (p_code[i] != '#')
+            {
+                i++;
+            }
+            i += 2;
             continue;
         }
 
