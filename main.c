@@ -3,6 +3,7 @@
 #include "path_variable_scanner.c"
 #include "file_reader.c"
 #include "tokenizer.c"
+#include "parser.c"
 
 int main(int argc, char *argv[]) {
     
