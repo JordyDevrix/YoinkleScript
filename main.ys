@@ -4,20 +4,22 @@
 lolzak
 #
 
-
-
 answer = read("Did bob built something?: ");
 bob_built_something = answer;
 
-if (bob_built_something >= True) {
-    build = read("What did bob build?: ");
-    big = read("Is the thing that bob built big?: ");
-    if (big) {
-        print("Bob built a big %V", build);
-    };
+my_task = task(arg_1) {
+    return "hello there"
 };
 
-my_new_int = 55.55;
+if (bob_built_something == True) {
+    print("%V", my_task);
+} else {
+};
 
-
+my_new_int = 155;
+my_new_flt = 1.5;
+my_new_bool = True;
+my_second_bool = False;
+my_new_str = "hello world";
+my_second_str = 'hello world';
 

@@ -3,7 +3,7 @@
 #define SYMBOLS ";,(){}[]"
 #define OPERATORS "+-*/%="
 #define COMPARATORS { "==", "!=", ">", "<", ">=", "<=" }
-#define KEYWORDS {"if", "else"}
+#define KEYWORDS {"if", "else", "return", "task", "for", "while"}
 
 typedef enum {
     TOKEN_NULL,
@@ -36,7 +36,9 @@ Token *tokenize_code(char *p_code) {
     int i = 0;
 
     const char *comparators[] = COMPARATORS;
+    const char *keywords[] = KEYWORDS;
     int n_comparators = sizeof(comparators) / sizeof(comparators[0]);
+    int n_keywords = sizeof(keywords) / sizeof(keywords[0]);
 
     while (i < code_length)
     {   
@@ -237,6 +239,70 @@ Token *tokenize_code(char *p_code) {
             continue;
         }
 
+        // Adding BOOLEAN values to the token list
+        if (strncmp(&p_code[i], "True", 4) == 0 || strncmp(&p_code[i], "False", 5) == 0)
+        {
+            TokenType token_type = TOKEN_BOOLEAN;
+            char *token_value = (char *) malloc(1 * sizeof(char));
+
+            if (strncmp(&p_code[i], "True", 4) == 0)
+            {
+                token_value = (char *) realloc(token_value, 5 * sizeof(char));
+                strcpy(token_value, "True");
+                i += 4;
+            } else {
+                token_value = (char *) realloc(token_value, 6 * sizeof(char));
+                strcpy(token_value, "False");
+                i += 5;
+            }
+
+            token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            token_list[token_count] = (Token) { token_type, token_value };
+            token_count++;
+
+            continue;
+        }
+
+        // Adding KEYWORDS to the token list
+        for (int j = 0; j < n_keywords; j++)
+        {
+            if (strncmp(&p_code[i], keywords[j], strlen(keywords[j])) == 0)
+            {
+                TokenType token_type = TOKEN_KEYWORD;
+                char *token_value = (char *) malloc(strlen(keywords[j]) * sizeof(char));
+                strcpy(token_value, keywords[j]);
+                i += strlen(keywords[j]);
+
+                token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+                token_list[token_count] = (Token) { token_type, token_value };
+                token_count++;
+
+                continue;
+            }
+        }
+
+        // Adding IDENTIFIERS to the token list
+        if (isalpha(p_code[i]) != 0)
+        {
+            TokenType token_type = TOKEN_IDENTIFIER;
+            char *token_value = (char *) malloc(1 * sizeof(char));
+
+            int last_j = 0;
+            for (int j = 0; (isalnum(p_code[i]) != 0)  || (strncmp(&p_code[i], "_", 1)) == 0; j++)
+            {
+                token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                token_value[j] = p_code[i];
+                i++;
+                last_j = j;
+            }
+            token_value[last_j + 1] = '\0';
+
+            token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            token_list[token_count] = (Token) { token_type, token_value };
+            token_count++;
+
+            continue;
+        }
         i++;
 
 
