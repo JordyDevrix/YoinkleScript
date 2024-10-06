@@ -206,7 +206,40 @@ Token *tokenize_code(char *p_code) {
             i++;
             continue;
         }
+
+        // Adding INTEGERS or FLOATS to the token list
+        if ((isdigit(p_code[i]) == 1) || (p_code[i] == '.' && isdigit(p_code[i + 1]) == 1))
+        {
+            TokenType token_type;
+            char *token_value = (char *) malloc(1 * sizeof(char));
+
+            int last_j = 0;
+            for (int j = 0; isdigit(p_code[i]) == 1 || p_code[i] == '.'; j++)
+            {
+                token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                token_value[j] = p_code[i];
+                i++;
+                last_j = j;
+            }
+            token_value[last_j + 1] = '\0';
+
+            if (strchr(token_value, '.') != NULL)
+            {
+                token_type = TOKEN_FLOAT;
+            } else {
+                token_type = TOKEN_INTEGER;
+            }
+
+            token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            token_list[token_count] = (Token) { token_type, token_value };
+            token_count++;
+
+            continue;
+        }
+
         i++;
+
+
     }
     token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
     token_list[token_count] = (Token) { TOKEN_NULL, NULL };

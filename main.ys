@@ -5,6 +5,7 @@ lolzak
 #
 
 
+
 answer = read("Did bob built something?: ");
 bob_built_something = answer;
 
@@ -16,6 +17,7 @@ if (bob_built_something >= True) {
     };
 };
 
+my_new_int = 55.55;
 
 
 
