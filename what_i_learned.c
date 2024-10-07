@@ -347,6 +347,39 @@ int main(int argc, char *argv[]) {
     // filecontent[i] = '\0';
 
     // printf("The content of the file is: %s\n", filecontent);
+
+
+    typedef struct {
+        int integer;
+        int boolean;
+        float floateger;
+        char *stringer;
+    } Data;
+
+    typedef enum {
+        INTEGER,
+        BOOLEAN,
+        FLOAT,
+        STRING
+    } DataType;
+
+    typedef struct {
+        Data value;
+        DataType type;
+    } Node;
+
+    Node node1;
+    Node node2;
+
+    node1.value.integer = 10;
+    node1.type = INTEGER;
+
+    node2.value.stringer = "Hello world bye world";
+    node2.type = STRING;
+
+    printf("The value of node1 is %d and the type is %d\n", node1.value.integer, node1.type);
+    printf("The value of node2 is %s and the type is %d\n", node2.value.stringer, node2.type);
+
     
 
 
