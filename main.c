@@ -64,11 +64,13 @@ int main(int argc, char *argv[]) {
         }
 
         // Checking if the tokens flag has been set to 1 and printing the tokens
-        if (my_flags->tokens) {
+        int print_tokens = my_flags->tokens;
+        if (print_tokens) {
             printf("v v v TOKENS v v v\n");
-            int i = 0;
-            for (int i = 0; p_tokens[i].type != TOKEN_NULL; i++) {
-
+        }
+        int token_list_length = 0;
+        for (int i = 0; p_tokens[i].type != TOKEN_NULL; i++) {
+            if (print_tokens) {
                 switch (p_tokens[i].type)
                 {
                     case TOKEN_STRING:
@@ -102,11 +104,13 @@ int main(int argc, char *argv[]) {
                         break;
                 }
             }
+        
+            token_list_length = i;
         }
 
         if (my_flags->ast) {
             printf("v v v ABSTRACT SYNTAX TREE v v v\n");
-            parse_tokens(p_tokens);
+            parse_tokens(p_tokens, token_list_length);
         }
     }
 

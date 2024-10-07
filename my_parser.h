@@ -7,6 +7,6 @@
 
 
 
-int parse_tokens(Token *p_tokens);
+int parse_tokens(Token *p_tokens, int token_list_length);
 
 #endif
