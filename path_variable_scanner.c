@@ -1,14 +1,5 @@
 #include "common.h"
-
-typedef struct {
-    int help;
-    int version;
-    int tokens;
-    int ast;
-    int file;
-    int code;
-    char *file_path;
-} flags;
+#include "path_variable_scanner.h"
 
 flags *path_variable_scanner(int argc, char *argv[]) {
 

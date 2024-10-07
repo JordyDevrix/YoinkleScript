@@ -1,9 +1,10 @@
 #include "common.h"
 
-#include "path_variable_scanner.c"
-#include "file_reader.c"
-#include "tokenizer.c"
-#include "parser.c"
+#include "path_variable_scanner.h"
+#include "file_reader.h"
+#include "tokenizer.h"
+#include "my_parser.h"
+
 
 int main(int argc, char *argv[]) {
     
@@ -105,6 +106,7 @@ int main(int argc, char *argv[]) {
 
         if (my_flags->ast) {
             printf("v v v ABSTRACT SYNTAX TREE v v v\n");
+            
         }
     }
 
