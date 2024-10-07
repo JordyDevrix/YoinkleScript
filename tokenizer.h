@@ -11,7 +11,8 @@ typedef enum {
     TOKEN_KEYWORD,
     TOKEN_OPERATOR,
     TOKEN_SYMBOL,
-    TOKEN_COMPARATOR
+    TOKEN_COMPARATOR,
+    TOKEN_NAN
 } TokenType;
 
 typedef struct {

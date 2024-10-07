@@ -1,11 +1,12 @@
 #include "common.h"
 #include "my_parser.h"
-#include "tokenizer.h"
 
-void parse_tokens(Token *p_tokens) {
-    printf("Parsing tokens\n");
-    Token *p_current_token = p_tokens;
-    while (p_current_token != NULL) {
-        printf("Token: %s\n", p_current_token->type);
+// Function to parse the tokens into an abstract syntax tree
+int parse_tokens(Token *p_tokens) {
+    int i = 0;
+    while (p_tokens[i].type != NULL) {
+        Token token = p_tokens[i];
+        printf("%i\t%i\t%s\n", i, token.type, token.value);
+        i++;
     }
 }
