@@ -6,8 +6,10 @@ typedef struct Node Node;
 struct Node {
     char *value;
     TokenType type;
-    Node *next;
+    int num_childs;
+    struct Node *childs;
 };
+
 
 
 int depth = 0;
@@ -16,27 +18,32 @@ int parse_tokens(Token *p_tokens, int i) {
         printf("Index: %d\n", i);
         printf("Depth: %d\n", depth);
 
-        Node node1;
-        node1.value = "example";
-        node1.type = TOKEN_STRING;
-        node1.next = NULL; // Next node is initially NULL
+        Node *nodep1 = malloc(sizeof(Node));
+        nodep1->value = "I am the parent node";
+        nodep1->type = TOKEN_STRING;
+        nodep1->num_childs = 0;
+        nodep1->childs = NULL;
 
-        // Create another Node and link it to the first
-        Node node2;
-        node2.value = "another example";
-        node2.type = TOKEN_INTEGER;
-        node1.next = &node2; // node1 now points to node2
+        Node *nodec1 = malloc(sizeof(Node));
+        nodec1->value = "I am a child node";
+        nodec1->type = TOKEN_STRING;
+        nodec1->num_childs = 0;
+        nodec1->childs = NULL;
 
-        // Create another Node and link it to the second
-        Node node3;
-        node3.value = "yet another example";
-        node3.type = TOKEN_FLOAT;
-        node2.next = &node3; // node2 now points to node3
+        Node *nodec2 = malloc(sizeof(Node));
+        nodec2->value = "I am also a child node";
+        nodec2->type = TOKEN_STRING;
+        nodec2->num_childs = 0;
+        nodec2->childs = NULL;
 
-        // Print the values of the nodes
-        printf("Node 1: %s\n", node3.value);
-        printf("Node 3: %s\n", node1.next->next->value);
+        nodep1->num_childs = 2;
+        nodep1->childs = malloc(sizeof(Node) * 2);
+        nodep1->childs[0] = *nodec1;
+        nodep1->childs[1] = *nodec2;
 
+        printf("Parent node value: %s\n", nodep1->value);
+        printf("Child node value: %s\n", nodep1->childs[0].value);
+        printf("Child node value: %s\n", nodep1->childs[1].value);
 
         switch (p_tokens[i].type) {
             case TOKEN_IDENTIFIER:
