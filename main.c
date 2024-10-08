@@ -105,12 +105,13 @@ int main(int argc, char *argv[]) {
                 }
             }
         
-            token_list_length = i;
+            
         }
 
         if (my_flags->ast) {
             printf("v v v ABSTRACT SYNTAX TREE v v v\n");
-            parse_tokens(p_tokens, token_list_length);
+            int index = 0;
+            parse_tokens(p_tokens, index);
         }
     }
 
