@@ -110,8 +110,7 @@ int main(int argc, char *argv[]) {
 
         if (my_flags->ast) {
             printf("v v v ABSTRACT SYNTAX TREE v v v\n");
-            int index = 0;
-            parse_tokens(p_tokens, index);
+            parse_tokens(p_tokens);
         }
     }
 
