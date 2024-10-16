@@ -7,7 +7,24 @@ By building a programming language myself I can get a better understanding of ev
 
 <br/>
 
+## Progress
+#### Essential
+- [x] File reader
+- [x] Execution arguments
+- [x] Tokenizer
+- [ ] Parser
+- [ ] Runtime
+- [x] Syntax Highlighting
+#### Can be done later
+- [ ] Builtins
+- [ ] Installer
+- [x] Documentation
+
+
+
 ## Syntax
+> [!IMPORTANT]
+> As I'm writing this, YoinkleScript is still in development and may not even be finished. This means that the documentation below might be incorrect or outdated
 ### Variables
 YoinkleScript has a easy to learn syntax that is similar to other programming languages like JavaScript and Python. YoinkleScript offers dynamic typing which means that int, float and string typing is not needed.
 ```javascript
@@ -65,4 +82,7 @@ Arguments and flags:
   file            The path to the file you want to run
 ```
 
+<br/>
 
+> [!CAUTION]
+> As the creator of YoinkleScript, I hereby declare that the software is provided "as is" without any warranty of any kind, either express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non-infringement. I am not liable for any bugs, errors, or issues that may arise from the use of YoinkleScript. By using this programming language, you acknowledge and accept that any consequences, including potential data loss, system crashes, or other malfunctions, are solely your responsibility. Use YoinkleScript at your own risk.
