@@ -14,14 +14,22 @@ int main(int argc, char *argv[]) {
     // Printing the help message and exiting
     if (my_flags->help) {
         printf(
-            "Help\n"
-            "  -h | --help: Display this help message\n"
-            "  -v | --version: Display the version\n"
-            "  -d | --debug: Add behind your script to run in debug\n"
-            "  -t: Add behind your script to view the tokens\n"
-            "  -a: Add behind your script to view abstract syntax tree\n"
-            "  -f: Add behind your script to view the file path\n"
-            "  -c: Add behind your script to view the code\n"
+            "Usage: %s [flags] [file_path]\n"
+            "Arguments and flags:\n"
+            "  -h, --help      Display this help message\n"
+            "  -v, --version   Display the version\n"
+            "  -d, --debug     Add behind your script to run in debug\n"
+            "  -t              Add behind your script to view the tokens\n"
+            "  -a              Add behind your script to view abstract syntax tree\n"
+            "  -f              Add behind your script to view the file path\n"
+            "  -c              Add behind your script to view the code\n"
+            "  file            The path to the file you want to run\n"
+            "Flags can be combined and the order does not matter\n"
+            "It is also valid to set the file first and then the flags\n"
+            "But for simplicity and clarity, it is recommended to set the flags first\n"
+            "For more information, visit the GitHub repository: https://github.com/JordyDevrix/YoinkleScript\n"
+            "Happy Yoinkling!\n",
+            argv[0]
         );
         free(my_flags);
         exit(0);
