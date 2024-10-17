@@ -12,26 +12,26 @@ Node *parse_tokens(Token *p_tokens) {
 
         switch (p_tokens[i].type) {
             case TOKEN_IDENTIFIER:
-                // Allocate memory for the parent node
-                Node *p_node = malloc(sizeof(Node));
+                // // Allocate memory for the parent node
+                // Node *p_node = malloc(sizeof(Node));
 
-                // Define the parent node (which could be a variable)
-                p_node->start_t = i;
-                p_node->end_t = i; // This will be updated later (need to find the end token which is the semicolon)
+                // // Define the parent node (which could be a variable)
+                // p_node->start_t = i;
+                // p_node->end_t = i; // This will be updated later (need to find the end token which is the semicolon)
 
-                // Increase index by one to get the next token
-                i += 1;
+                // // Increase index by one to get the next token
+                // i += 1;
                 
-                // Define the child node(s)
-                Node *child_nodes = parse_tokens(p_tokens);
+                // // Define the child node(s)
+                // Node *child_nodes = parse_tokens(p_tokens);
                 
-                if (child_nodes->type == NODE_ASSIGN) {
-                    p_node->type = NODE_VAR_DECL;
-                    p_node->num_childs = 1;
-                    p_node->childs = malloc(2 * sizeof(Node));
-                    // Assign the child node(s) to the parent node
-                    p_node->childs[0] = child_nodes[0];
-                }
+                // if (child_nodes->type == NODE_ASSIGN) {
+                //     p_node->type = NODE_VAR_DECL;
+                //     p_node->num_childs = 1;
+                //     p_node->childs = malloc(2 * sizeof(Node));
+                //     // Assign the child node(s) to the parent node
+                //     p_node->childs[0] = child_nodes[0];
+                // }
 
                 i += 1;
                 break;
@@ -50,12 +50,12 @@ Node *parse_tokens(Token *p_tokens) {
                 break;
             case TOKEN_STRING:
                 i += 1;
-                Node *p_node = malloc(sizeof(Node));
-                p_node->start_t = i;
-                p_node->end_t = i;
-                p_node->num_childs = 0;
-                p_node->childs = NULL;
-                return p_node;
+                // Node *p_node = malloc(sizeof(Node));
+                // p_node->start_t = i;
+                // p_node->end_t = i;
+                // p_node->num_childs = 0;
+                // p_node->childs = NULL;
+                // return p_node;
             case TOKEN_INTEGER:
                 i += 1;
                 break;
