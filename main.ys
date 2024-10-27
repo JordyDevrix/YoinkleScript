@@ -7,7 +7,7 @@ lolzak
 answer = read("Did bob built something?: ");
 bob_built_something = answer;
 
-my_task = task(arg_1) {
+task my_task(arg_1) {
     return "hello there"
 };
 

@@ -1,0 +1,1 @@
+answer = read("Did bob built something?: ");
