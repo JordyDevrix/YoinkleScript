@@ -17,7 +17,8 @@ typedef enum {
     NODE_BIN_EXPR,
     NODE_FUNC_CALL,
     NODE_LITERAL,
-    NODE_OPERATOR
+    NODE_OPERATOR,
+    NODE_ARGS
 } NodeType;
 
 typedef struct Node Node;
