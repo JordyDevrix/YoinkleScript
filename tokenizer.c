@@ -75,11 +75,23 @@ Token *tokenize_code(char *p_code) {
             {
                 TokenType token_type = TOKEN_COMPARATOR;
                 char *token_value = (char *) malloc(3 * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
+
                 token_value[0] = p_code[i];
                 token_value[1] = p_code[i + 1];
                 token_value[2] = '\0';
 
                 token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+                if (token_list == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
+
                 token_list[token_count] = (Token) { token_type, token_value };
                 token_count++;
 
@@ -99,10 +111,22 @@ Token *tokenize_code(char *p_code) {
             {
                 TokenType token_type = TOKEN_COMPARATOR;
                 char *token_value = (char *) malloc(3 * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
+
                 token_value[0] = p_code[i];
                 token_value[1] = '\0';
 
                 token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+                if (token_list == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
+
                 token_list[token_count] = (Token) { token_type, token_value };
                 token_count++;
 
@@ -116,10 +140,22 @@ Token *tokenize_code(char *p_code) {
         {
             TokenType token_type = TOKEN_SYMBOL;
             char *token_value = (char *) malloc(2 * sizeof(char));
+            if (token_value == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
+
             token_value[0] = p_code[i];
             token_value[1] = '\0';
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
+
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -132,10 +168,21 @@ Token *tokenize_code(char *p_code) {
         {
             TokenType token_type = TOKEN_OPERATOR;
             char *token_value = (char *) malloc(2 * sizeof(char));
+            if (token_value == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
+
             token_value[0] = p_code[i];
             token_value[1] = '\0';
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -149,11 +196,21 @@ Token *tokenize_code(char *p_code) {
             i++;
             TokenType token_type = TOKEN_STRING;
             char *token_value = (char *) malloc(1 * sizeof(char));
+            if (token_value == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
 
             int last_j = 0;
             for (int j = 0; p_code[i] != '"'; j++)
             {
                 token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
                 token_value[j] = p_code[i];
                 i++;
                 last_j = j;
@@ -161,6 +218,11 @@ Token *tokenize_code(char *p_code) {
             token_value[last_j + 1] = '\0';
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -174,11 +236,21 @@ Token *tokenize_code(char *p_code) {
             i++;
             TokenType token_type = TOKEN_STRING;
             char *token_value = (char *) malloc(1 * sizeof(char));
+            if (token_value == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
 
             int last_j = 0;
             for (int j = 0; p_code[i] != '\''; j++)
             {
                 token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
                 token_value[j] = p_code[i];
                 i++;
                 last_j = j;
@@ -186,6 +258,11 @@ Token *tokenize_code(char *p_code) {
             token_value[last_j + 1] = '\0';
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -198,11 +275,22 @@ Token *tokenize_code(char *p_code) {
         {
             TokenType token_type;
             char *token_value = (char *) malloc(1 * sizeof(char));
+            if (token_value == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
 
             int last_j = 0;
             for (int j = 0; isdigit(p_code[i]) == 1 || p_code[i] == '.'; j++)
             {
                 token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
+
                 token_value[j] = p_code[i];
                 i++;
                 last_j = j;
@@ -217,6 +305,11 @@ Token *tokenize_code(char *p_code) {
             }
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -228,19 +321,39 @@ Token *tokenize_code(char *p_code) {
         {
             TokenType token_type = TOKEN_BOOLEAN;
             char *token_value = (char *) malloc(1 * sizeof(char));
+            if (token_value == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
 
             if (strncmp(&p_code[i], "True", 4) == 0)
             {
                 token_value = (char *) realloc(token_value, 5 * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
                 strcpy(token_value, "True");
                 i += 4;
             } else {
                 token_value = (char *) realloc(token_value, 6 * sizeof(char));
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
                 strcpy(token_value, "False");
                 i += 5;
             }
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -254,10 +367,20 @@ Token *tokenize_code(char *p_code) {
             {
                 TokenType token_type = TOKEN_KEYWORD;
                 char *token_value = (char *) malloc(strlen(keywords[j]) * sizeof(char));
+                if (token_value == NULL) {
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
+
                 strcpy(token_value, keywords[j]);
                 i += strlen(keywords[j]);
 
                 token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+                if (token_list == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
                 token_list[token_count] = (Token) { token_type, token_value };
                 token_count++;
 
@@ -269,12 +392,29 @@ Token *tokenize_code(char *p_code) {
         if (isalpha(p_code[i]) != 0)
         {
             TokenType token_type = TOKEN_IDENTIFIER;
-            char *token_value = (char *) malloc(1 * sizeof(char));
+            char *token_value = (char *) malloc(256 * sizeof(char));
+            if (token_value == NULL) {
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
 
             int last_j = 0;
             for (int j = 0; (isalnum(p_code[i]) != 0)  || (strncmp(&p_code[i], "_", 1)) == 0; j++)
             {
-                token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                // Allocating more memory for the token value if the current memory is not enough
+                if (j % 256 == 0)
+                {
+                    token_value = (char *) realloc(token_value, (j + 256) * sizeof(char));
+                    if (token_value == NULL) {
+                        fprintf(stderr, "Memory allocation failed\n");
+                        exit(1);
+                    }
+                }
+                if (token_value == NULL) {
+                    free(token_list);
+                    fprintf(stderr, "Memory allocation failed\n");
+                    exit(1);
+                }
                 token_value[j] = p_code[i];
                 i++;
                 last_j = j;
@@ -282,6 +422,11 @@ Token *tokenize_code(char *p_code) {
             token_value[last_j + 1] = '\0';
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+            if (token_list == NULL) {
+                free(token_list);
+                fprintf(stderr, "Memory allocation failed\n");
+                exit(1);
+            }
             token_list[token_count] = (Token) { token_type, token_value };
             token_count++;
 
@@ -292,6 +437,11 @@ Token *tokenize_code(char *p_code) {
 
     }
     token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
+    if (token_list == NULL) {
+        free(token_list);
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
     token_list[token_count] = (Token) { TOKEN_NULL, NULL };
     token_count++;
 

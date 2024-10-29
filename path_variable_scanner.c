@@ -44,7 +44,8 @@ flags *path_variable_scanner(int argc, char *argv[]) {
             else if ((strcmp(argument, "-d") == 0) || (strcmp(argument, "--debug") == 0)) {
                 ptr_program_flags->ast = 1;
                 ptr_program_flags->tokens = 1;
-                ptr_program_flags->file = 1;                
+                ptr_program_flags->file = 1;    
+                ptr_program_flags->code = 1;            
             } else {
                 printf("");
 
@@ -72,6 +73,11 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 int space_length = 35;
                 int argument_length = strlen(argument);
                 char *error_line = malloc(sizeof(char) * (space_length + argument_length + 1));
+                if (error_line == NULL) {
+                    printf("Memory allocation failed\n");
+                    printf("\nExited with code 1\n");
+                    exit(1);
+                }
 
                 for (int i = 0; i < space_length; i++) {
                     error_line[i] = ' ';

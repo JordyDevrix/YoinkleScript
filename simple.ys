@@ -1,3 +1,20 @@
-answer = read();
-answer = read;
-answer = read("Hello world");
+## This is a single line comment
+
+#
+This is a multi-line comment
+#
+my_value = (2 * (2 + 4));
+my_value = 3.14;
+my_value = True;
+my_value = "Hello World";
+my_value = (2 + (my_value * 3));
+my_value = new_val;
+my_value = [1, (2 + 2), (5 * (3 + 3))];
+my_value = read("Hello World");
+read("hello world", my_value);
+
+my_value = 2;
+if (my_value == True) {
+} else {
+    print("Fuck you");
+};
