@@ -16,7 +16,7 @@ By building a programming language myself I can get a better understanding of ev
 - [ ] Runtime
 - [x] Syntax Highlighting
 #### Can be done later
-- [ ] Builtins
+- [ ] Builtins/standard library
 - [ ] Installer
 - [x] Documentation
 
