@@ -54,6 +54,7 @@ int main(int argc, char *argv[]) {
         char *p_code = file_reader(my_flags->file_path);
         if (p_code == NULL) {
             free(my_flags);
+            printf("\nExited with code 1\n");
             exit(1);
         }
 
@@ -68,6 +69,7 @@ int main(int argc, char *argv[]) {
         if (p_tokens == NULL) {
             free(my_flags);
             free(p_code);
+            printf("\nExited with code 1\n");
             exit(1);
         }
 
@@ -126,5 +128,6 @@ int main(int argc, char *argv[]) {
 
     free(my_flags);
 
+    printf("\nExited with code 0\n");
     return 0;
 } 

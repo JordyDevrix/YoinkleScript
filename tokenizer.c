@@ -10,6 +10,7 @@ Token *tokenize_code(char *p_code) {
     Token *token_list = (Token *) malloc(sizeof(Token));
     if (token_list == NULL) {
         printf("Memory allocation failed\n");
+        printf("\nExited with code 1\n");
         exit(1);
     }
 

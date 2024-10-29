@@ -7,6 +7,7 @@ char *file_reader(char *file_path) {
 
     if (p_file == NULL) {
         printf("File not found\n");
+        printf("\nExited with code 1\n");
         exit(1);
     }
 

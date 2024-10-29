@@ -19,7 +19,10 @@ typedef enum {
     NODE_LITERAL,
     NODE_OPERATOR,
     NODE_ARGS,
-    NODE_END
+    NODE_ARGS_END,
+    NODE_END,
+    NODE_IDENTIFIER,
+    NODE_AST
 } NodeType;
 
 typedef struct Node Node;

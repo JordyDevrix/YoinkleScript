@@ -6,6 +6,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
     flags *ptr_program_flags = malloc(sizeof(flags));
     if (ptr_program_flags == NULL) {
         printf("Memory allocation failed\n");
+        printf("\nExited with code 1\n");
         exit(1);
     }
 
@@ -62,6 +63,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 printf("Unkown flag: %s\n%s\n", argument, error_line);
                 printf("Use -h or --help to view the help message\n");
                 exit(1);
+                printf("\nExited with code 1\n");
                 break;
             }
         } else {
@@ -81,6 +83,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 printf("One or multiple unknown arguments: %s\n%s\n", argument, error_line);
                 printf("Use -h or --help to view the help message\n");
                 free(ptr_program_flags);
+                printf("\nExited with code 1\n");
                 exit(1);
             }
             char *file_extension = strrchr(argument, '.');
@@ -101,6 +104,7 @@ flags *path_variable_scanner(int argc, char *argv[]) {
                 printf("File cannot be read: %s (File might not be a YoinkleScript file)\n%s\n", argument, error_line);
                 printf("Use -h or --help to view the help message\n");
                 free(ptr_program_flags);
+                printf("\nExited with code 1\n");
                 exit(1);
             }
             ptr_program_flags->file_path = argument;
