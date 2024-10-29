@@ -47,11 +47,11 @@ print("%V", answer);
 <br/>
 
 ### Keywords
-Keywords in YoinkleScript are very similar to keywords in Python, Ruby and JavaScript. YoinkleScript uses many keywords liek if, else and return that are quite similar to what other programming languages offer. The function keyword (``def`` in python) is task in YoinkleScript and a function is defined as a variable like any other variable. This means that variables can be of type ints, floats and strings but also of type function.
+Keywords in YoinkleScript are very similar to keywords in Python, Ruby and JavaScript. YoinkleScript uses many keywords liek if, else and return that are quite similar to what other programming languages offer. The function keyword (``def`` in python) is task in YoinkleScript.
 
 Functions
 ```javascript
-my_task = task(arg_1) {
+task my_new_task(arg_1) {
     return "hello there"
 };
 ```
