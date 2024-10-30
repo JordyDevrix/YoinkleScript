@@ -6,6 +6,27 @@
 #include "tokenizer.h"
 #include "my_parser.h"
 
+// Enum for the variable types
+typedef enum {
+    VAR_INT,
+    VAR_FLOAT,
+    VAR_STRING,
+    VAR_BOOLEAN,
+    VAR_NULL
+} VarType;
+
+// Variable stack
+typedef struct {
+    char *name;
+    VarType type;
+    union {
+        long long int_value;
+        float float_value;
+        char *string_value;
+        int boolean_value;
+    } value;
+} Variable;
+
 void run_runtime(Node *AST, Token *p_tokens);
 
 #endif

@@ -13,12 +13,14 @@ This is a multi-line comment
 ## my_value = read("Hello World");
 ## read("hello world", my_value);
 
-my_value1 = 3;
-my_value2 = 2.5;
-my_value1 = True;
-my_value3 = 3;
+## my_value1 = 3;
+## my_value2 = 2.5;
+## my_value1 = True;
+## my_value3 = 3;
 
-new_value = (my_value1 + my_value2);
+new_value = (414532896256363441 + (0 - 414532896256363441));
+
+print("Hello World %V_%V Bye world", new_value, new_value);
 
 ## if (values == 2) {
 ##     hello = 2;

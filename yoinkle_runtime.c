@@ -1,28 +1,10 @@
 #include "common.h"
-#include "yoinkle_runtime.h"
+// #include "yoinkle_runtime.h"
+#include "standard_library.h"
+#include <errno.h>
+#include <limits.h>
 
 int run_depth = 0;
-
-// Enum for the variable types
-typedef enum {
-    VAR_INT,
-    VAR_FLOAT,
-    VAR_STRING,
-    VAR_BOOLEAN,
-    VAR_NULL
-} VarType;
-
-// Variable stack
-typedef struct {
-    char *name;
-    VarType type;
-    union {
-        int int_value;
-        float float_value;
-        char *string_value;
-        int boolean_value;
-    } value;
-} Variable;
 
 Variable *var_stack;
 
@@ -65,7 +47,18 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
             return new_var;
         case NODE_INT_LITERAL:
             ;
-            int int_value = atoi(p_tokens[NODE->start_t].value);
+            errno = 0; // Clear errno before conversion
+            char *end;
+
+            long long int_value = strtoll(p_tokens[NODE->start_t].value, &end, 10);
+
+            if (errno == ERANGE) {
+                printf("Number out of range for long long.\n");
+                exit(1);
+            } else if (*end != '\0') {
+                printf("Conversion stopped at unexpected character: %c\n", *end);
+                exit(1);
+            }
             new_var = malloc(sizeof(Variable));
             new_var->name = NULL;
             new_var->type = VAR_INT;
@@ -188,7 +181,29 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
             }
             return result;
 
-                
+        case NODE_FUNC_CALL:
+            ;
+            // Getting arguments
+            int num_args = NODE->childs[0].num_childs;
+            Variable *args;
+            if (num_args > 0) {
+                args = malloc(sizeof(Variable) * num_args);
+                if (args == NULL) {
+                    printf("Error: Could not allocate memory for function arguments\n");
+                    exit(1);
+                }
+                for (int i = 0; i < num_args; i++) {
+                    args[i] = *runtime(&NODE->childs[0].childs[i], p_tokens);
+                }
+            }
+            
+            // Getting function name
+            char *func_name = p_tokens[NODE->start_t].value;
+
+            // Checking if the function is a standard function
+            if (strcmp(func_name, "print") == 0) {
+                yoinkle_std_print(args, num_args);
+            }
     }
 }
 
@@ -200,20 +215,20 @@ void run_runtime(Node *AST, Token *p_tokens) {
     // Running AST per node
     for (int i = 0; i < ast_length; i++) {
         Node *current_node = &AST->childs[i];
-        printf("Running node %d\n", i);
+        // printf("Running node %d\n", i);
         runtime(current_node, p_tokens);
-        printf("  Variable stack length: %d\n", var_num);
+        // printf("  Variable stack length: %d\n", var_num);
         for (int j = 0; j < var_num; j++) {
             if (var_stack[j].type == VAR_INT) {
-                printf("  Variable %d: %s - %d\n", j, var_stack[j].name, var_stack[j].value.int_value);
+                // printf("  Variable %d: %s - %d\n", j, var_stack[j].name, var_stack[j].value.int_value);
             } else if (var_stack[j].type == VAR_FLOAT) {
-                printf("  Variable %d: %s - %f\n", j, var_stack[j].name, var_stack[j].value.float_value);
+                // printf("  Variable %d: %s - %f\n", j, var_stack[j].name, var_stack[j].value.float_value);
             } else if (var_stack[j].type == VAR_STRING) {
-                printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.string_value);
+                // printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.string_value);
             } else if (var_stack[j].type == VAR_BOOLEAN) {
-                printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.boolean_value ? "True" : "False");
+                // printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.boolean_value ? "True" : "False");
             } else {
-                printf("  Variable %d: %s - NULL\n", j, var_stack[j].name);
+                // printf("  Variable %d: %s - NULL\n", j, var_stack[j].name);
             }
         }
     }
