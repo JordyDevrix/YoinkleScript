@@ -236,6 +236,34 @@ Node *parser(Token *p_tokens) {
                     i += 1;
                     return p_node;
                 }
+
+                // Checking for functions
+                if (strcmp(p_tokens[i].value, "task") == 0) {
+                    p_node = malloc(sizeof(Node));
+
+                    p_node->type = NODE_FUNC_DECL;
+                    p_node->start_t = i;
+                    p_node->num_childs = 0;
+
+                    i += 1;
+                    // Parsing the function name
+                    Node *p_child = parser(p_tokens);
+                    p_child->type = NODE_IDENTIFIER;
+                    p_node->num_childs += 1;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+                    p_node->childs[0] = *p_child;
+
+                    // Parsing the body
+                    Node *p_body = parser(p_tokens);
+                    p_node->num_childs += 1;
+                    p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
+                    p_node->childs[1] = *p_body;
+
+                    p_node->end_t = i;
+                    i += 1;
+                    return p_node;
+                }
+
                 break;
             case TOKEN_SYMBOL:
                 if (strcmp(p_tokens[i].value, ",") == 0) {
@@ -320,7 +348,6 @@ Node *parser(Token *p_tokens) {
 
                     p_node->type = NODE_STMT_BODY;
                     p_node->start_t = i;
-                    p_node->end_t = i;
                     p_node->num_childs = 0;
                     p_node->childs = NULL;
 
@@ -338,6 +365,7 @@ Node *parser(Token *p_tokens) {
                             p_node->childs[j] = *p_child;
                         }
                     }
+                    p_node->end_t = i;
                     return p_node;
                 }
 
