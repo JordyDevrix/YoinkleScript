@@ -32,6 +32,8 @@ typedef enum {
     NODE_CONDITION,
     NODE_STMT_BODY,
     NODE_BRACK_CLOSE,
+    NODE_BREAK_STMT,
+    NODE_SKIP_STMT,
     NODE_AST
 } NodeType;
 

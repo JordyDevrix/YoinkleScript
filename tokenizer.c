@@ -4,7 +4,7 @@
 #define SYMBOLS ";,(){}[]"
 #define OPERATORS "+-*/%="
 #define COMPARATORS { "==", "!=", ">", "<", ">=", "<=" }
-#define KEYWORDS {"if", "else", "return", "task", "for", "while"}
+#define KEYWORDS {"if", "else", "return", "task", "for", "while", "break", "skip"}
 
 Token *tokenize_code(char *p_code) {
     Token *token_list = (Token *) malloc(sizeof(Token));

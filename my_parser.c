@@ -88,6 +88,12 @@ void print_ast_recursive(Node *AST, Token *p_tokens) {
         case NODE_BRACK_CLOSE:
             printf("NODE_BRACK_CLOSE - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
             break;
+        case NODE_BREAK_STMT:
+            printf("NODE_BREAK_STMT - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
+            break;
+        case NODE_SKIP_STMT:
+            printf("NODE_SKIP_STMT - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
+            break;
         case NODE_AST:
             printf("NODE_AST - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
             break;
@@ -264,6 +270,55 @@ Node *parser(Token *p_tokens) {
                     return p_node;
                 }
 
+                // Checking for return statement
+                if (strcmp(p_tokens[i].value, "return") == 0) {
+                    p_node = malloc(sizeof(Node));
+
+                    p_node->type = NODE_RETURN_STMT;
+                    p_node->start_t = i;
+                    p_node->num_childs = 0;
+
+                    i += 1;
+                    // Parsing the return value
+                    Node *p_child = parser(p_tokens);
+                    p_node->num_childs += 1;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+                    p_node->childs[0] = *p_child;
+
+                    p_node->end_t = i;
+                    i += 1;
+                    printf("Current token: %s\n", p_tokens[i].value);
+                    return p_node;
+                }
+
+                // Checking for break statement
+                if (strcmp(p_tokens[i].value, "break") == 0) {
+                    p_node = malloc(sizeof(Node));
+
+                    p_node->type = NODE_BREAK_STMT;
+                    p_node->start_t = i;
+                    p_node->end_t = i;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
+
+                    i += 1;
+                    return p_node;
+                }
+
+                // Checking for skip statement
+                if (strcmp(p_tokens[i].value, "skip") == 0) {
+                    p_node = malloc(sizeof(Node));
+
+                    p_node->type = NODE_SKIP_STMT;
+                    p_node->start_t = i;
+                    p_node->end_t = i;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
+
+                    i += 1;
+                    return p_node;
+                }
+
                 break;
             case TOKEN_SYMBOL:
                 if (strcmp(p_tokens[i].value, ",") == 0) {
@@ -317,6 +372,7 @@ Node *parser(Token *p_tokens) {
                     p_node->childs = NULL;
 
                     i += 1;
+                    int childs_pos = 0;
                     for (int j = 0; p_tokens[i].type != TOKEN_NULL; j++) {
                         Node *p_child = parser(p_tokens);
                         if (p_child->type == NODE_PAREN_CLOSE) {
@@ -325,7 +381,8 @@ Node *parser(Token *p_tokens) {
                             p_node->num_childs += 1;
 
                             p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
-                            p_node->childs[j] = *p_child;
+                            p_node->childs[childs_pos] = *p_child;
+                            childs_pos += 1;
                         }
                     }
                     return p_node;
@@ -352,6 +409,7 @@ Node *parser(Token *p_tokens) {
                     p_node->childs = NULL;
 
                     i += 1;
+                    int childs_pos = 0;
                     for (int j = 0; p_tokens[i].type != TOKEN_NULL; j++) {
                         Node *p_child = parser(p_tokens);
                         if (p_child->type == NODE_BRACK_CLOSE) {
@@ -362,7 +420,8 @@ Node *parser(Token *p_tokens) {
                             p_node->num_childs += 1;
 
                             p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
-                            p_node->childs[j] = *p_child;
+                            p_node->childs[childs_pos] = *p_child;
+                            childs_pos += 1;
                         }
                     }
                     p_node->end_t = i;
@@ -526,11 +585,5 @@ Node *parse_tokens(Token *p_tokens) {
 
     print_ast_recursive(AST, p_tokens);
 
-    // Freeing the memory
-    free(AST);
-    free(node_list);
-
-    AST = NULL;
-    node_list = NULL;
-
+    return AST;    
 }

@@ -15,14 +15,15 @@ This is a multi-line comment
 
 ## my_value = 2;
 
-if (True) {
-    print("Hello World");
-};
+## if (values == 2) {
+##     hello = 2;
+##     hello = 2;
+## };
 
 waarde = 10;
 
 task my_task(waarde) {
     print("Hello World %V", waarde);
+    return (1 + 3);
 };
 
-my_task(waarde);
