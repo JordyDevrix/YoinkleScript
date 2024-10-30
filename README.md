@@ -12,7 +12,7 @@ By building a programming language myself I can get a better understanding of ev
 - [x] File reader
 - [x] Execution arguments
 - [x] Tokenizer
-- [ ] Parser
+- [x] Parser
 - [ ] Runtime
 - [x] Syntax Highlighting
 #### Can be done later
