@@ -287,7 +287,6 @@ Node *parser(Token *p_tokens) {
 
                     p_node->end_t = i;
                     i += 1;
-                    printf("Current token: %s\n", p_tokens[i].value);
                     return p_node;
                 }
 
@@ -555,7 +554,7 @@ Node *parser(Token *p_tokens) {
     }
 }
 
-Node *parse_tokens(Token *p_tokens) {
+Node *parse_tokens(Token *p_tokens, int ast_flag) {
     Node *node_list = NULL;
 
     int node_num = 0;
@@ -582,8 +581,11 @@ Node *parse_tokens(Token *p_tokens) {
     for (int j = 0; j < node_num; j++) {
         AST->childs[j] = node_list[j];
     }
-
-    print_ast_recursive(AST, p_tokens);
+    
+    if (ast_flag) {
+        printf("v v v ABSTRACT SYNTAX TREE v v v\n");
+        print_ast_recursive(AST, p_tokens);
+    }
 
     return AST;    
 }

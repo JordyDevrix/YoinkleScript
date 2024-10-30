@@ -47,6 +47,6 @@ struct Node {
     struct Node *childs;
 };
 
-Node *parse_tokens(Token *p_tokens);
+Node *parse_tokens(Token *p_tokens, int p_ast);
 
 #endif

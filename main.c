@@ -4,6 +4,7 @@
 #include "file_reader.h"
 #include "tokenizer.h"
 #include "my_parser.h"
+#include "yoinkle_runtime.h"
 
 
 int main(int argc, char *argv[]) {
@@ -65,9 +66,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Tokenizing the code and optionally printing the tokens when the -t flag is set
-        printf("Before tokenize_code\n");
         Token *p_tokens = tokenize_code(p_code);
-        printf("After tokenize_code\n");
         if (p_tokens == NULL) {
             free(my_flags);
             free(p_code);
@@ -121,18 +120,11 @@ int main(int argc, char *argv[]) {
             
         }
 
-        if (my_flags->ast) {
-            printf("v v v ABSTRACT SYNTAX TREE v v v\n");
-            parse_tokens(p_tokens);
-            // Node *AST = parse_tokens(p_tokens);
-        }
+        // Parsing the tokens and optionally printing the abstract syntax tree when the -a flag is set
+        Node *AST = parse_tokens(p_tokens, my_flags->ast);
 
-        // Freeing the tokens
-        // for (int i = 0; i < token_list_length; i++) {
-        //     printf("Freeing token %s\n", p_tokens[i].value);
-        //     free(p_tokens[i].value);
-        //     p_tokens[i].value = NULL;
-        // }
+        // Running the runtime
+        run_runtime(AST, p_tokens);
 
         free(p_tokens);
         p_tokens = NULL;
