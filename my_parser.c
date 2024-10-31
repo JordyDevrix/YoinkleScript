@@ -396,8 +396,10 @@ Node *parser(Token *p_tokens) {
                             childs_pos += 1;
                         }
                     }
-                    if (p_node->childs[1].type == NODE_COMPARE) {
-                        p_node->type = NODE_CONDITION;
+                    if (p_node->num_childs > 1) {
+                        if (p_node->childs[1].type == NODE_COMPARE) {
+                            p_node->type = NODE_CONDITION;
+                        }
                     }
                     return p_node;
                 }

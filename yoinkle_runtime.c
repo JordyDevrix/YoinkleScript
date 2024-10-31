@@ -7,9 +7,11 @@
 int run_depth = 0;
 
 Variable *var_stack;
+Variable *function_var_stack;
+int in_function = 0;
 
 int var_num = 0;
-Variable *runtime(Node *NODE, Token *p_tokens) {
+Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
     switch (NODE->type) {
         Variable *new_var;
         case NODE_VAR_DECL:
@@ -17,7 +19,7 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
             char *var_name = p_tokens[NODE->childs[0].start_t].value;
 
             // Getting the second child of the node
-            new_var = runtime(&NODE->childs[1], p_tokens);
+            new_var = runtime(&NODE->childs[1], p_tokens, AST);
             
             // Checking if the variable already exists
             int variable_exists = 0;
@@ -98,8 +100,8 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
             break;
         case NODE_BIN_EXPR:
             ;
-            Variable *left = runtime(&NODE->childs[0], p_tokens);
-            Variable *right = runtime(&NODE->childs[2], p_tokens);
+            Variable *left = runtime(&NODE->childs[0], p_tokens, AST);
+            Variable *right = runtime(&NODE->childs[2], p_tokens, AST);
             Variable *result = malloc(sizeof(Variable));
             result->name = NULL;
             if ((left->type == VAR_INT && right->type == VAR_INT)) {
@@ -194,7 +196,7 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
                     exit(1);
                 }
                 for (int i = 0; i < num_args; i++) {
-                    args[i] = *runtime(&NODE->childs[0].childs[i], p_tokens);
+                    args[i] = *runtime(&NODE->childs[0].childs[i], p_tokens, AST);
                 }
             }
             
@@ -206,26 +208,68 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
                 yoinkle_std_print(args, num_args);
             } else if (strcmp(func_name, "println") == 0) {
                 yoinkle_std_println(args, num_args);
+            } else if (strcmp(func_name, "exit") == 0) {
+                int exit_code = 0;
+                if (num_args > 0) {
+                    exit_code = args[0].value.int_value;
+                }
+                yoinkle_std_exit(AST, p_tokens, var_stack, exit_code);
+            } else if (strcmp(func_name, "read") == 0) {
+                char *prompt = NULL;
+                if (num_args > 0) {
+                    prompt = args[0].value.string_value;
+                }
+                char *input = yoinkle_std_read(prompt);
+
+                new_var = malloc(sizeof(Variable));
+                new_var->name = NULL;
+
+                // Checking if the input is an integer
+                char *end;
+                errno = 0;
+                long long int_value = strtoll(input, &end, 10);
+                if (errno == 0 && *end == '\0') {
+                    new_var->type = VAR_INT;
+                    new_var->value.int_value = int_value;
+                    return new_var;
+                }
+                // Checking if the input is a float
+                float float_value = strtof(input, &end);
+                if (errno == 0 && *end == '\0') {
+                    new_var->type = VAR_FLOAT;
+                    new_var->value.float_value = float_value;
+                    return new_var;
+                }
+                // Checking if the input is a boolean
+                if (strcmp(input, "True") == 0 || strcmp(input, "False") == 0) {
+                    new_var->type = VAR_BOOLEAN;
+                    new_var->value.boolean_value = strcmp(input, "True") == 0 ? 1 : 0;
+                    return new_var;
+                }
+                // If the input is not a one of the above, then it is a string
+                new_var->type = VAR_STRING;
+                new_var->value.string_value = input;
+                return new_var;
+            } else {
+                printf("Error: Function '%s' not found\n", func_name);
+                exit(1);
             }
             break;
         case NODE_IF_STMT:
             ;
-            Variable *condition = runtime(&NODE->childs[0], p_tokens);
+            Variable *condition = runtime(&NODE->childs[0], p_tokens, AST);
 
-            printf("Condition: %s\n", condition->value.boolean_value ? "True" : "False");
-            
             if (condition->value.boolean_value) {
-                printf("Node: %d\n", NODE->childs[1].type);
-                runtime(&NODE->childs[1].childs[0], p_tokens);
+                runtime(&NODE->childs[1].childs[0], p_tokens, AST);
             } else if (NODE->num_childs == 3 && NODE->childs[2].type == NODE_ELSE_STMT) {
-                runtime(&NODE->childs[2].childs[0], p_tokens);
+                runtime(&NODE->childs[2].childs[0], p_tokens, AST);
             }
             break;
 
         case NODE_CONDITION:
             ;
-            Variable *left_cond = runtime(&NODE->childs[0], p_tokens);
-            Variable *right_cond = runtime(&NODE->childs[2], p_tokens);
+            Variable *left_cond = runtime(&NODE->childs[0], p_tokens, AST);
+            Variable *right_cond = runtime(&NODE->childs[2], p_tokens, AST);
             Variable *result_cond = malloc(sizeof(Variable));
             result_cond->name = NULL;
             if (left_cond->type == VAR_INT && right_cond->type == VAR_INT) {
@@ -291,7 +335,7 @@ void run_runtime(Node *AST, Token *p_tokens) {
     for (int i = 0; i < ast_length; i++) {
         Node *current_node = &AST->childs[i];
         // printf("Running node %d\n", i);
-        runtime(current_node, p_tokens);
+        runtime(current_node, p_tokens, AST);
         // printf("  Variable stack length: %d\n", var_num);
         // for (int j = 0; j < var_num; j++) {
         //     if (var_stack[j].type == VAR_INT) {

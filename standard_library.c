@@ -340,3 +340,57 @@ void yoinkle_std_println(Variable *args, int num_args) {
     }
     putchar('\n');
 }
+
+void yoinkle_std_exit(Node *AST, Token *p_tokens, Variable *var_stack, int exit_code) {
+    free(AST);
+    free(p_tokens);
+    free(var_stack);
+
+    AST = NULL;
+    p_tokens = NULL;
+    var_stack = NULL;
+
+    printf("\nExiting with code %d\n", exit_code);
+    exit(exit_code);
+}
+
+char *yoinkle_std_read(char *prompt) {
+    if (prompt != NULL) {
+        char *format_string = prompt;
+        while (*format_string) 
+        {
+            if (*format_string == '\\') {
+                format_string++; // Move to the next character after the backslash
+                switch (*format_string) {
+                    case 't':
+                        putchar('\t'); // Print a tab character
+                        break;
+                    case 'n':
+                        putchar('\n'); // Print a new line character
+                        break;
+                    case 'r':
+                        putchar('\r'); // Carriage return
+                        break;
+                    case 'b':
+                        putchar('\b'); // Backspace (may not show effect)
+                        break;
+                    case '\\':
+                        putchar('\\'); // Backslash
+                        break;
+                    default:
+                        putchar('\\'); // Print the backslash if it's not followed by t or n
+                        putchar(*format_string);  // Print the next character
+                }
+            } else {
+                putchar(*format_string); // Print the regular character
+            }
+            format_string++; // Move to the next character in the string
+        }
+    }
+    char *input = malloc(1000);
+    fgets(input, 1000, stdin);
+
+    // Remove the newline character from the input
+    input[strcspn(input, "\n")] = 0;
+    return input;
+}

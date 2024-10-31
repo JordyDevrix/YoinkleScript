@@ -3,7 +3,6 @@
 #
 This is a multi-line comment
 #
-
 my_value1 = 3;
 my_value2 = 2.5;
 my_value1 = True;
@@ -20,10 +19,10 @@ println("%V\t", a);
 println("Hello World %V_%V Bye world %V", a, b, new_value);
 print("hello world \b\b", my_value1);
 
-my_bool = 32;
+my_bool = 33;
 if (my_bool > 1) {
     if (my_bool > 32) {
-        print("1 World %V", my_bool);
+        exit(1);
     } else {
         print("2 World %V", my_bool);
     };
@@ -31,7 +30,9 @@ if (my_bool > 1) {
     print("3 World %V", my_bool);
 };
 
-## waarde = 10;
+waarde = read("Jouw waarde: ");
+antwoord = (waarde +  3);
+println("%V", read("Jouw waarde: \b\b\b\b"));
 
 ## task my_task(waarde) {
 ##     print("Hello World %V", waarde);
