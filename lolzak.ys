@@ -15,5 +15,9 @@ task function(n) {
 
 println("Function: %V", function(0));
 
+println("Function: %V", timestmp("%s"));
+
+
+
 
 

@@ -266,6 +266,13 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
             } else if (strcmp(func_name, "to_string") == 0) {
                 new_var = yoinkle_std_value_to_string(&args[0]);
                 return new_var;
+            } else if (strcmp(func_name, "timestmp") == 0) {
+                char *format_string = NULL;
+                if (num_args > 0) {
+                    format_string = args[0].value.string_value;
+                }
+                new_var = yoinkle_std_get_system_time(format_string);
+                return new_var;
             } else {
                 // Checking if the function is a user defined function
                 int function_found = 0;
