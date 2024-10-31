@@ -1,18 +1,19 @@
-task main(){
-    println("hello world");
-    println("hello world");
-    println("hello world");
-    println("hello world");
-    if (True) {
-        println("\thello world");
-        return 0;
-    };
+## Lets create a fibonacci sequence
+
+task add(n) {
+    return n+=3;
 };
 
-println("hello world %V", waarde);
+task function(n) {
+    while (n < 10) {
+        n-=1;
+        n = add(n);
+        println("N: %V", n);
+    };
+    return n;
+};
 
-main();
-main();
-main();
+println("Function: %V", function(0));
+
 
 

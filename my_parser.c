@@ -161,6 +161,7 @@ Node *parser(Token *p_tokens) {
                     p_next->type = NODE_ARGS;
                     p_node->childs[0] = *p_next;
                     p_node->end_t = i;
+
                     return p_node;
                 } else {
                     // Checking if next token is a + operator and the token after that is also an operator if so then its a increment operator
@@ -296,6 +297,7 @@ Node *parser(Token *p_tokens) {
 
                     // Parsing the body
                     Node *p_body = parser(p_tokens);
+
                     p_node->num_childs += 1;
                     p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
                     p_node->childs[1] = *p_body;
@@ -308,7 +310,7 @@ Node *parser(Token *p_tokens) {
                 // Checking for return statement
                 if (strcmp(p_tokens[i].value, "return") == 0) {
                     p_node = malloc(sizeof(Node));
-
+                    int line = p_tokens[i].start;
                     p_node->type = NODE_RETURN_STMT;
                     p_node->start_t = i;
                     p_node->num_childs = 0;
@@ -316,6 +318,10 @@ Node *parser(Token *p_tokens) {
                     i += 1;
                     // Parsing the return value
                     Node *p_child = parser(p_tokens);
+                    if (strcmp(p_tokens[i].value, ";") != 0) {
+                        printf("\033[1;31m\nError at line %d:\n\tExpected a semicolon after return statement\033[0m\n", line);
+                        exit(1);
+                    }
                     p_node->num_childs += 1;
                     p_node->childs = malloc(p_node->num_childs * sizeof(Node));
                     p_node->childs[0] = *p_child;

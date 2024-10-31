@@ -236,7 +236,7 @@ Token *tokenize_code(char *p_code) {
                 fprintf(stderr, "Memory allocation failed\n");
                 exit(1);
             }
-            token_list[token_count] = (Token) { token_type, token_value };
+            token_list[token_count] = (Token) { token_type, token_value, line_number };
             token_count++;
 
             i++;
@@ -286,7 +286,7 @@ Token *tokenize_code(char *p_code) {
                 fprintf(stderr, "Memory allocation failed\n");
                 exit(1);
             }
-            token_list[token_count] = (Token) { token_type, token_value };
+            token_list[token_count] = (Token) { token_type, token_value, line_number };
             token_count++;
 
             i++;
@@ -333,7 +333,7 @@ Token *tokenize_code(char *p_code) {
                 fprintf(stderr, "Memory allocation failed\n");
                 exit(1);
             }
-            token_list[token_count] = (Token) { token_type, token_value };
+            token_list[token_count] = (Token) { token_type, token_value, line_number };
             token_count++;
 
             continue;
@@ -377,7 +377,7 @@ Token *tokenize_code(char *p_code) {
                 fprintf(stderr, "Memory allocation failed\n");
                 exit(1);
             }
-            token_list[token_count] = (Token) { token_type, token_value };
+            token_list[token_count] = (Token) { token_type, token_value, line_number };
             token_count++;
 
             continue;

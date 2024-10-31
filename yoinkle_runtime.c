@@ -98,7 +98,7 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 }
             }
             if (!var_found) {
-                printf("\nError at line %d:\n\tVariable '%s' does not exist\n", p_tokens[NODE->start_t].start, identifier);
+                printf("\033[1;31m\nError at line %d:\n\tVariable '%s' does not exist\n\033[0m", p_tokens[NODE->start_t].start, identifier);
                 exit(1);
             }
             break;
@@ -181,9 +181,12 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 }
                 result->value.string_value = new_string;
             } else {
-                printf("Error: Unsupported operation\n");
-                printf("Cannot perform operation of type %s and %s\n", 
-                left->type == VAR_INT ? "int" : left->type == VAR_FLOAT ? "float" : left->type == VAR_STRING ? "string" : left->type == VAR_BOOLEAN ? "boolean" : "null", right->type == VAR_INT ? "int" : right->type == VAR_FLOAT ? "float" : right->type == VAR_STRING ? "string" : right->type == VAR_BOOLEAN ? "boolean" : "null");
+                printf(
+                    "\033[1;31m\nError at line %d: OperationError\n\tCannot perform operation of type %s and %s\n\033[0m",
+                    p_tokens[NODE->childs[0].start_t].start,
+                    left->type == VAR_INT ? "int" : left->type == VAR_FLOAT ? "float" : left->type == VAR_STRING ? "string" : left->type == VAR_BOOLEAN ? "boolean" : "null",
+                    right->type == VAR_INT ? "int" : right->type == VAR_FLOAT ? "float" : right->type == VAR_STRING ? "string" : right->type == VAR_BOOLEAN ? "boolean" : "null"
+                );
                 exit(1);
             }
             return result;
@@ -328,7 +331,7 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                     }
                 }
                 if (!function_found) {
-                    printf("\nError at line %d:\n\tFunction '%s' does not exist\n", p_tokens[NODE->start_t].start, func_name);
+                    printf("\033[1;31m\nError at line %d:\n\tFunction '%s' does not exist\n\033[0m", p_tokens[NODE->start_t].start, func_name);
                     exit(1);
                 }
                 free(args);
@@ -448,9 +451,13 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                         result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) != 0;
                     }
                 } else {
-                    printf("Error: Unsupported operation\n");
-                    printf("Cannot perform comparison of type %s and %s\n", 
-                    left_cond->type == VAR_INT ? "int" : left_cond->type == VAR_FLOAT ? "float" : left_cond->type == VAR_STRING ? "string" : left_cond->type == VAR_BOOLEAN ? "boolean" : "null", right_cond->type == VAR_INT ? "int" : right_cond->type == VAR_FLOAT ? "float" : right_cond->type == VAR_STRING ? "string" : right_cond->type == VAR_BOOLEAN ? "boolean" : "null");
+                    
+                    printf(
+                        "\033[1;31m\nError at line %d: CompareError\n\tCannot compare conditions of type %s and %s\n\033[0m",
+                        p_tokens[NODE->childs[0].start_t].start,
+                        left_cond->type == VAR_INT ? "int" : left_cond->type == VAR_FLOAT ? "float" : left_cond->type == VAR_STRING ? "string" : left_cond->type == VAR_BOOLEAN ? "boolean" : "null",
+                        right_cond->type == VAR_INT ? "int" : right_cond->type == VAR_FLOAT ? "float" : right_cond->type == VAR_STRING ? "string" : right_cond->type == VAR_BOOLEAN ? "boolean" : "null"
+                    );
                     exit(1);
                 }
                 return result_cond;
@@ -531,9 +538,12 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                     result_short->value.float_value = left_short->value.float_value / right_short->value.int_value;
                 }
             } else {
-                printf("Error: Unsupported operation\n");
-                printf("Cannot perform operation of type %s and %s\n",
-                left_short->type == VAR_INT ? "int" : left_short->type == VAR_FLOAT ? "float" : left_short->type == VAR_STRING ? "string" : left_short->type == VAR_BOOLEAN ? "boolean" : "null", right_short->type == VAR_INT ? "int" : right_short->type == VAR_FLOAT ? "float" : right_short->type == VAR_STRING ? "string" : right_short->type == VAR_BOOLEAN ? "boolean" : "null");
+                printf(
+                    "\033[1;31m\nError at line %d: OperationError\n\tCannot perform operation of type %s and %s\n\033[0m",
+                    p_tokens[NODE->childs[0].start_t].start,
+                    left_short->type == VAR_INT ? "int" : left_short->type == VAR_FLOAT ? "float" : left_short->type == VAR_STRING ? "string" : left_short->type == VAR_BOOLEAN ? "boolean" : "null",
+                    right_short->type == VAR_INT ? "int" : right_short->type == VAR_FLOAT ? "float" : right_short->type == VAR_STRING ? "string" : right_short->type == VAR_BOOLEAN ? "boolean" : "null"
+                );                
                 exit(1);
             }
             // Saving the result to the left variable
