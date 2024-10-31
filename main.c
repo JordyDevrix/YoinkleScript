@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
     // Printing the version number and exiting
     if (my_flags->version) {
-        printf("Version: 02/10/2024 v0.0.1 pre-alpha\n");
+        printf("Version: 02/10/2024 v0.1.0-alpha\n");
         free(my_flags);
         exit(0);
     }
