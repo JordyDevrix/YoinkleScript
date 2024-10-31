@@ -394,3 +394,61 @@ char *yoinkle_std_read(char *prompt) {
     input[strcspn(input, "\n")] = 0;
     return input;
 }
+
+Variable *yoinkle_std_value_to_int(Variable *var) {
+    Variable *new_var = malloc(sizeof(Variable));
+    new_var->name = NULL;
+    new_var->type = VAR_INT;
+    if (var->type == VAR_INT) {
+        new_var->value.int_value = var->value.int_value;
+    } else if (var->type == VAR_FLOAT) {
+        new_var->value.int_value = (long long)var->value.float_value;
+    } else if (var->type == VAR_STRING) {
+        char *end;
+        new_var->value.int_value = strtoll(var->value.string_value, &end, 10);
+    } else if (var->type == VAR_BOOLEAN) {
+        new_var->value.int_value = var->value.boolean_value;
+    }
+    return new_var;
+}
+
+Variable *yoinkle_std_value_to_float(Variable *var) {
+    Variable *new_var = malloc(sizeof(Variable));
+    new_var->name = NULL;
+    new_var->type = VAR_FLOAT;
+    if (var->type == VAR_INT) {
+        new_var->value.float_value = (float)var->value.int_value;
+    } else if (var->type == VAR_FLOAT) {
+        new_var->value.float_value = var->value.float_value;
+    } else if (var->type == VAR_STRING) {
+        char *end;
+        new_var->value.float_value = strtof(var->value.string_value, &end);
+    } else if (var->type == VAR_BOOLEAN) {
+        new_var->value.float_value = var->value.boolean_value;
+    }
+    return new_var;
+}
+
+Variable *yoinkle_std_value_to_string(Variable *var) {
+    Variable *new_var = malloc(sizeof(Variable));
+    new_var->name = NULL;
+    new_var->type = VAR_STRING;
+    if (var->type == VAR_INT) {
+        char *string_value = malloc(20);
+        sprintf(string_value, "%lld", var->value.int_value);
+        new_var->value.string_value = string_value;
+    } else if (var->type == VAR_FLOAT) {
+        char *string_value = malloc(20);
+        sprintf(string_value, "%f", var->value.float_value);
+        new_var->value.string_value = string_value;
+    } else if (var->type == VAR_STRING) {
+        char *string_value = malloc(strlen(var->value.string_value) + 1);
+        strcpy(string_value, var->value.string_value);
+        new_var->value.string_value = string_value;
+    } else if (var->type == VAR_BOOLEAN) {
+        char *string_value = malloc(6);
+        strcpy(string_value, var->value.boolean_value ? "True" : "False");
+        new_var->value.string_value = string_value;
+    }
+    return new_var;
+}

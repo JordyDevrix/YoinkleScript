@@ -27,6 +27,12 @@ typedef struct {
     } value;
 } Variable;
 
+// Functions stack with node and name
+typedef struct {
+    char *name;
+    Node *node;
+} Function;
+
 void run_runtime(Node *AST, Token *p_tokens);
 
 #endif

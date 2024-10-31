@@ -7,10 +7,13 @@
 int run_depth = 0;
 
 Variable *var_stack;
-Variable *function_var_stack;
-int in_function = 0;
+Function *function_stack;
 
 int var_num = 0;
+int function_num = 0;
+
+int in_function = 0;
+
 Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
     switch (NODE->type) {
         Variable *new_var;
@@ -250,10 +253,64 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 new_var->type = VAR_STRING;
                 new_var->value.string_value = input;
                 return new_var;
+            } else if (strcmp(func_name, "to_int") == 0) {
+                new_var = yoinkle_std_value_to_int(&args[0]);
+                return new_var;
+            } else if (strcmp(func_name, "to_float") == 0) {
+                new_var = yoinkle_std_value_to_float(&args[0]);
+                return new_var;
+            } else if (strcmp(func_name, "to_string") == 0) {
+                new_var = yoinkle_std_value_to_string(&args[0]);
+                return new_var;
             } else {
-                printf("Error: Function '%s' not found\n", func_name);
-                exit(1);
-            }
+                // Checking if the function is a user defined function
+                for (int i = 0; i < function_num; i++) {
+                    if (strcmp(func_name, function_stack[i].name) == 0) {
+                        Node *function_args = function_stack[i].node->childs[0].childs[0].childs;
+                        Node *function_body = function_stack[i].node->childs;
+                        // saving the current global variable stack
+                        Variable *old_var_stack = var_stack;
+                        int old_var_num = var_num;
+
+                        // Creating a new variable stack for the function
+                        var_stack = malloc(sizeof(Variable) * num_args);
+
+                        // Adding the arguments to the variable stack
+                        var_num = 0;
+                        for (int j = 0; j < num_args; j++) {
+                            var_stack = realloc(var_stack, sizeof(Variable) * (var_num + 1));
+                            var_stack[j] = args[j];
+                            var_stack[j].name = p_tokens[function_args[j].start_t].value;
+
+                            var_num++;
+                        }
+
+                        // Running the function
+                        Variable *result;
+                        result = NULL;
+                        for (int j = 0; j < function_body[1].num_childs; j++) {
+                            if (function_body[1].childs[j].type == NODE_RETURN_STMT) {
+                                result = runtime(&function_body[1].childs[j].childs[0], p_tokens, AST);
+                                break;
+                            }
+                            runtime(&function_body[1].childs[j], p_tokens, AST);
+                        }
+
+                        // Freeing the variable stack
+                        free(var_stack);
+
+                        // Restoring the global variable stack
+                        var_stack = old_var_stack;
+                        var_num = old_var_num;
+                        
+                        // Freeing the arguments
+                        free(args);
+
+                        return result;
+                    }
+                }
+
+            } 
             break;
         case NODE_IF_STMT:
             ;
@@ -323,6 +380,17 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 exit(1);
             }
             return result_cond;
+        case NODE_FUNC_DECL:
+            ;
+            // Getting the function name
+            char *func_decl_name = p_tokens[NODE->childs[0].start_t].value;
+
+            // Adding the function to the function stack
+            function_stack = realloc(function_stack, sizeof(Function) * (function_num + 1));
+            function_stack[function_num].name = func_decl_name;
+            function_stack[function_num].node = NODE;
+            function_num++;
+            break;
     }
 }
 

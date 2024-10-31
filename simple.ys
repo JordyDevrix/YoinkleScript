@@ -3,7 +3,12 @@
 #
 This is a multi-line comment
 #
-my_value1 = 3;
+my_value1 = to_string(22);
+my_value2 = to_int(2.5);
+my_value3 = to_float(3);
+
+my_value4 = read("Jouw waarde: ");
+println("Jouw waarde: %V", my_value4);
 my_value2 = 2.5;
 my_value1 = True;
 my_value3 = 3;
@@ -16,26 +21,46 @@ b = a;
 a = (a + "abc");
 println("%V\t", a);
 
-println("Hello World %V_%V Bye world %V", a, b, new_value);
-print("hello world \b\b", my_value1);
+println("Hello World %V_%V Bye world %V", a, b, my_value1);
+print("hello world \b\b");
 
-my_bool = 33;
+my_bool = 32;
 if (my_bool > 1) {
     if (my_bool > 32) {
         exit(1);
     } else {
-        print("2 World %V", my_bool);
+        println("2 World %V", my_bool);
     };
 } else {
-    print("3 World %V", my_bool);
+    println("3 World %V", my_bool);
 };
 
-waarde = read("Jouw waarde: ");
-antwoord = (waarde +  3);
-println("%V", read("Jouw waarde: \b\b\b\b"));
+## println("%V", read("Jouw waarde: "));
+waarde = 44;
 
-## task my_task(waarde) {
-##     print("Hello World %V", waarde);
-##     return waarde;
-## };
+task my_task2(waarde) {
+    println("\t%V", waarde);
+};
 
+task my_task3(waarde) {
+    println("\t\t%V", waarde);
+};
+
+task my_task(waarde) {
+    println("Hello World %V", waarde);
+    my_task2(waarde);
+    waarde = (waarde + 1);
+    my_task2(waarde);
+    waarde = (waarde + 1);
+    my_task2(waarde);
+    if (waarde < 1) {
+        my_task2(waarde);
+    } else {
+        my_task3(waarde);
+    };
+    return waarde;
+};
+
+waarde = my_task(waarde);
+
+println("%V", waarde);
