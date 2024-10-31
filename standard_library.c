@@ -3,53 +3,340 @@
 
 void yoinkle_std_print(Variable *args, int num_args) {
     // Printing the arguments
-    // printf("Arg 2: %lld\n", args[1].value.int_value);
+    // printf("Arg 2: %d\n", args[2].value.int_value);
 
     // If there are multiple arguments, then the first argument is a string
-    if (num_args <= 1) {
-        printf("%s", args[0].value.string_value);
-    } else {
-        // Getting the format string and replacing all the %V with the arguments
-        char *format_string = args[0].value.string_value;
-        int format_string_len = strlen(format_string);
-        int format_string_index = 0;
-        for (int i = 1; i < num_args; i++) {
-            // Getting the argument
-            Variable arg = args[i];
-            switch (arg.type) {
-                case VAR_INT:
-                    ;
-                    for (int pos = 0; pos < format_string_len; pos++) {
-                        if (format_string[pos] == '%' && format_string[pos + 1] == 'V') {
-                            // Copy the first part of the format string
-                            char *dest;
-                            dest = malloc(pos + 1);
-                            strncpy(dest, format_string, pos);
-                            dest[pos] = '\0';
+    // Getting the format string and replacing all the %V with the arguments
+    char *format_string = args[0].value.string_value;
+    int format_string_len = strlen(format_string);
+    int format_string_index = 0;
+    int arg_index = 1;
+    if (num_args > 1) {
+        for (int pos = 0; pos < format_string_len; pos++) {
+            if (format_string[pos] == '%' && format_string[pos + 1] == 'V') {
+                // Getting the argument
+                Variable arg = args[arg_index];
+                switch (arg.type) {
+                    char *dest;
+                    char *argument;
+                    char *rest;
+                    int arg_length;
 
-                            // Insert the argument
-                            int arg_length = snprintf(NULL, 0, "%lld", arg.value.int_value);
-                            char *argument = malloc(arg_length + 1); // Allocate space for string + null terminator
-                            snprintf(argument, arg_length + 1, "%lld", arg.value.int_value); // Convert integer to string
+                    case VAR_INT:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
 
-                            // Copy the rest of the format string
-                            char *rest = malloc(format_string_len - pos - 2);
-                            strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
-                            rest[format_string_len - pos - 2] = '\0';
+                        // Insert the argument
+                        arg_length = snprintf(NULL, 0, "%lld", arg.value.int_value);
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        snprintf(argument, arg_length + 1, "%lld", arg.value.int_value); // Convert integer to string
 
-                            // Concatenate the strings
-                            format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
-                            strcpy(format_string, dest);
-                            strcat(format_string, argument);
-                            strcat(format_string, rest);
-                            format_string_len = strlen(format_string);
-                            free(dest);
-                            free(argument);
-                            free(rest);
-                        }
-                    }
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+                    case VAR_FLOAT:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = snprintf(NULL, 0, "%f", arg.value.float_value);
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        snprintf(argument, arg_length + 1, "%f", arg.value.float_value); // Convert float to string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+
+                    case VAR_BOOLEAN:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = snprintf(NULL, 0, "%s", arg.value.boolean_value ? "True" : "False");
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        snprintf(argument, arg_length + 1, "%s", arg.value.boolean_value ? "True" : "False"); // Convert boolean to string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+
+                    case VAR_STRING:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = strlen(arg.value.string_value);
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        strcpy(argument, arg.value.string_value); // Copy the string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+                }
             }
         }
-        printf("%s\n", format_string);
     }
+    while (*format_string) 
+    {
+        if (*format_string == '\\') {
+            format_string++; // Move to the next character after the backslash
+            switch (*format_string) {
+                case 't':
+                    putchar('\t'); // Print a tab character
+                    break;
+                case 'n':
+                    putchar('\n'); // Print a new line character
+                    break;
+                case 'r':
+                    putchar('\r'); // Carriage return
+                    break;
+                case 'b':
+                    putchar('\b'); // Backspace (may not show effect)
+                    break;
+                case '\\':
+                    putchar('\\'); // Backslash
+                    break;
+                default:
+                    putchar('\\'); // Print the backslash if it's not followed by t or n
+                    putchar(*format_string);  // Print the next character
+            }
+        } else {
+            putchar(*format_string); // Print the regular character
+        }
+        format_string++; // Move to the next character in the string
+    }
+}
+
+void yoinkle_std_println(Variable *args, int num_args) {
+    // Printing the arguments
+
+    // If there are multiple arguments, then the first argument is a string
+    // Getting the format string and replacing all the %V with the arguments
+    char *format_string = args[0].value.string_value;
+    int format_string_len = strlen(format_string);
+    int format_string_index = 0;
+    int arg_index = 1;
+    if (num_args > 1) {
+        for (int pos = 0; pos < format_string_len; pos++) {
+            if (format_string[pos] == '%' && format_string[pos + 1] == 'V') {
+                // Getting the argument
+                Variable arg = args[arg_index];
+                switch (arg.type) {
+                    char *dest;
+                    char *argument;
+                    char *rest;
+                    int arg_length;
+
+                    case VAR_INT:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = snprintf(NULL, 0, "%lld", arg.value.int_value);
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        snprintf(argument, arg_length + 1, "%lld", arg.value.int_value); // Convert integer to string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+                    case VAR_FLOAT:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = snprintf(NULL, 0, "%f", arg.value.float_value);
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        snprintf(argument, arg_length + 1, "%f", arg.value.float_value); // Convert float to string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+
+                    case VAR_BOOLEAN:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = snprintf(NULL, 0, "%s", arg.value.boolean_value ? "True" : "False");
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        snprintf(argument, arg_length + 1, "%s", arg.value.boolean_value ? "True" : "False"); // Convert boolean to string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+
+                    case VAR_STRING:
+                        ;
+                        // Copy the first part of the format string
+                        dest = malloc(pos + 1);
+                        strncpy(dest, format_string, pos);
+                        dest[pos] = '\0';
+
+                        // Insert the argument
+                        arg_length = strlen(arg.value.string_value);
+                        argument = malloc(arg_length + 1); // Allocate space for string + null terminator
+                        strcpy(argument, arg.value.string_value); // Copy the string
+
+                        // Copy the rest of the format string
+                        rest = malloc(format_string_len - pos - 2);
+                        strncpy(rest, format_string + pos + 2, format_string_len - pos - 2);
+                        rest[format_string_len - pos - 2] = '\0';
+
+                        // Concatenate the strings
+                        format_string = malloc(strlen(dest) + strlen(argument) + strlen(rest) + 1);
+                        strcpy(format_string, dest);
+                        strcat(format_string, argument);
+                        strcat(format_string, rest);
+                        format_string_len = strlen(format_string);
+                        free(dest);
+                        free(argument);
+                        free(rest);
+                        arg_index++;
+                        break;
+                }
+            }
+        }
+    }
+    while (*format_string) 
+    {
+        if (*format_string == '\\') {
+            format_string++; // Move to the next character after the backslash
+            switch (*format_string) {
+                case 't':
+                    putchar('\t'); // Print a tab character
+                    break;
+                case 'n':
+                    putchar('\n'); // Print a new line character
+                    break;
+                case 'r':
+                    putchar('\r'); // Carriage return
+                    break;
+                case 'b':
+                    putchar('\b'); // Backspace (may not show effect)
+                    break;
+                case '\\':
+                    putchar('\\'); // Backslash
+                    break;
+                default:
+                    putchar('\\'); // Print the backslash if it's not followed by t or n
+                    putchar(*format_string);  // Print the next character
+            }
+        } else {
+            putchar(*format_string); // Print the regular character
+        }
+        format_string++; // Move to the next character in the string
+    }
+    putchar('\n');
 }

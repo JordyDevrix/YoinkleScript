@@ -4,5 +4,6 @@
 #include "yoinkle_runtime.h"
 
 void yoinkle_std_print(Variable *args, int num_args);
+void yoinkle_std_println(Variable *args, int num_args);
 
 #endif

@@ -3,29 +3,33 @@
 #
 This is a multi-line comment
 #
-## my_value = (2 * (2 + 4));
-## my_value = 3.14;
-## my_value = True;
-## my_value = "Hello World";
-## my_value = (2 + (my_value * 3));
-## my_value = new_val;
-## my_value = [1, (2 + 2), (5 * (3 + 3))];
-## my_value = read("Hello World");
-## read("hello world", my_value);
 
-## my_value1 = 3;
-## my_value2 = 2.5;
-## my_value1 = True;
-## my_value3 = 3;
+my_value1 = 3;
+my_value2 = 2.5;
+my_value1 = True;
+my_value3 = 3;
+my_string = '2';
 
 new_value = (414532896256363441 + (0 - 414532896256363441));
 
-print("Hello World %V_%V Bye world", new_value, new_value);
+a = "Hello";
+b = a;
+a = (a + "abc");
+println("%V\t", a);
 
-## if (values == 2) {
-##     hello = 2;
-##     hello = 2;
-## };
+println("Hello World %V_%V Bye world %V", a, b, new_value);
+print("hello world \b\b", my_value1);
+
+my_bool = 32;
+if (my_bool > 1) {
+    if (my_bool > 32) {
+        print("1 World %V", my_bool);
+    } else {
+        print("2 World %V", my_bool);
+    };
+} else {
+    print("3 World %V", my_bool);
+};
 
 ## waarde = 10;
 

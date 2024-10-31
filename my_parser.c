@@ -321,8 +321,14 @@ Node *parser(Token *p_tokens) {
                 break;
             case TOKEN_SYMBOL:
                 if (strcmp(p_tokens[i].value, ",") == 0) {
+                    p_node = malloc(sizeof(Node));
+                    p_node->type = NODE_LIST_COMMA;
+                    p_node->start_t = i;
+                    p_node->end_t = i;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
                     i += 1;
-                    return parser(p_tokens);
+                    return p_node;
                 }
                 if (strcmp(p_tokens[i].value, "[") == 0) {
                     p_node = malloc(sizeof(Node));
@@ -376,13 +382,22 @@ Node *parser(Token *p_tokens) {
                         Node *p_child = parser(p_tokens);
                         if (p_child->type == NODE_PAREN_CLOSE) {
                             break;
+                        } else if (p_child->type == NODE_LIST_COMMA) {
+                            continue;
                         } else {
                             p_node->num_childs += 1;
 
                             p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
+                            if (p_node->childs == NULL) {
+                                printf("Error: Could not allocate memory for bin expr\n");
+                                exit(1);
+                            }
                             p_node->childs[childs_pos] = *p_child;
                             childs_pos += 1;
                         }
+                    }
+                    if (p_node->childs[1].type == NODE_COMPARE) {
+                        p_node->type = NODE_CONDITION;
                     }
                     return p_node;
                 }

@@ -202,20 +202,30 @@ Token *tokenize_code(char *p_code) {
                 exit(1);
             }
 
-            int last_j = 0;
-            for (int j = 0; p_code[i] != '"'; j++)
+            int j = 0; // Initialize character index
+            while (p_code[i] != '"' && p_code[i] != '\0') // Ensure you don't go out of bounds
             {
-                token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                token_value = (char *) realloc(token_value, (j + 2) * sizeof(char)); // +2 for new char and null terminator
                 if (token_value == NULL) {
                     free(token_list);
                     fprintf(stderr, "Memory allocation failed\n");
                     exit(1);
                 }
-                token_value[j] = p_code[i];
+                token_value[j] = p_code[i]; // Add the current character
                 i++;
-                last_j = j;
+                j++;
             }
-            token_value[last_j + 1] = '\0';
+
+            // Check if we exited the loop due to closing quote or end of string
+            if (p_code[i] == '"') {
+                token_value[j] = '\0'; // Properly null-terminate
+            } else {
+                // Handle the case where the string is not properly closed (optional)
+                fprintf(stderr, "String not properly closed\n");
+                free(token_value);
+                free(token_list);
+                exit(1);
+            }
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
             if (token_list == NULL) {
@@ -242,20 +252,30 @@ Token *tokenize_code(char *p_code) {
                 exit(1);
             }
 
-            int last_j = 0;
-            for (int j = 0; p_code[i] != '\''; j++)
+            int j = 0; // Initialize character index
+            while (p_code[i] != '\'' && p_code[i] != '\0') // Ensure you don't go out of bounds
             {
-                token_value = (char *) realloc(token_value, (j + 1) * sizeof(char));
+                token_value = (char *) realloc(token_value, (j + 2) * sizeof(char)); // +2 for new char and null terminator
                 if (token_value == NULL) {
                     free(token_list);
                     fprintf(stderr, "Memory allocation failed\n");
                     exit(1);
                 }
-                token_value[j] = p_code[i];
+                token_value[j] = p_code[i]; // Add the current character
                 i++;
-                last_j = j;
+                j++;
             }
-            token_value[last_j + 1] = '\0';
+
+            // Check if we exited the loop due to closing quote or end of string
+            if (p_code[i] == '\'') {
+                token_value[j] = '\0'; // Properly null-terminate
+            } else {
+                // Handle the case where the string is not properly closed (optional)
+                fprintf(stderr, "String not properly closed\n");
+                free(token_value);
+                free(token_list);
+                exit(1);
+            }
 
             token_list = (Token *) realloc(token_list, (token_count + 1) * sizeof(Token));
             if (token_list == NULL) {

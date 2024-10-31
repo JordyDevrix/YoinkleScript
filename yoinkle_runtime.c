@@ -32,9 +32,10 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
             if (variable_exists) {
                 break;
             }
-            new_var->name = var_name;
+            
             var_stack = realloc(var_stack, sizeof(Variable) * (var_num + 1));
             var_stack[var_num] = *new_var;
+            var_stack[var_num].name = var_name;
             var_num++;
             break;
         case NODE_STR_LITERAL:
@@ -91,7 +92,7 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
                 }
             }
             if (!var_found) {
-                printf("Error: Variable %s not found\n", identifier);
+                printf("Error: Variable '%s' not found\n", identifier);
                 exit(1);
             }
             break;
@@ -203,14 +204,88 @@ Variable *runtime(Node *NODE, Token *p_tokens) {
             // Checking if the function is a standard function
             if (strcmp(func_name, "print") == 0) {
                 yoinkle_std_print(args, num_args);
+            } else if (strcmp(func_name, "println") == 0) {
+                yoinkle_std_println(args, num_args);
             }
+            break;
+        case NODE_IF_STMT:
+            ;
+            Variable *condition = runtime(&NODE->childs[0], p_tokens);
+
+            printf("Condition: %s\n", condition->value.boolean_value ? "True" : "False");
+            
+            if (condition->value.boolean_value) {
+                printf("Node: %d\n", NODE->childs[1].type);
+                runtime(&NODE->childs[1].childs[0], p_tokens);
+            } else if (NODE->num_childs == 3 && NODE->childs[2].type == NODE_ELSE_STMT) {
+                runtime(&NODE->childs[2].childs[0], p_tokens);
+            }
+            break;
+
+        case NODE_CONDITION:
+            ;
+            Variable *left_cond = runtime(&NODE->childs[0], p_tokens);
+            Variable *right_cond = runtime(&NODE->childs[2], p_tokens);
+            Variable *result_cond = malloc(sizeof(Variable));
+            result_cond->name = NULL;
+            if (left_cond->type == VAR_INT && right_cond->type == VAR_INT) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value == right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value != right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value > right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value < right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value >= right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value <= right_cond->value.int_value;
+                }
+            } else if (left_cond->type == VAR_FLOAT && right_cond->type == VAR_FLOAT) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value == right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value != right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value > right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value < right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value >= right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value <= right_cond->value.float_value;
+                }
+            } else if (left_cond->type == VAR_BOOLEAN && right_cond->type == VAR_BOOLEAN) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.boolean_value == right_cond->value.boolean_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.boolean_value != right_cond->value.boolean_value;
+                }
+            } else if (left_cond->type == VAR_STRING && right_cond->type == VAR_STRING) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) == 0;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) != 0;
+                }
+            } else {
+                printf("Error: Unsupported operation\n");
+                printf("Cannot perform operation of type %s and %s\n", 
+                left_cond->type == VAR_INT ? "int" : left_cond->type == VAR_FLOAT ? "float" : left_cond->type == VAR_STRING ? "string" : left_cond->type == VAR_BOOLEAN ? "boolean" : "null", right_cond->type == VAR_INT ? "int" : right_cond->type == VAR_FLOAT ? "float" : right_cond->type == VAR_STRING ? "string" : right_cond->type == VAR_BOOLEAN ? "boolean" : "null");
+                exit(1);
+            }
+            return result_cond;
     }
 }
 
 
 void run_runtime(Node *AST, Token *p_tokens) {
     int ast_length = AST->num_childs;
-    printf("AST length: %d\n", ast_length);
+    // printf("AST length: %d\n", ast_length);
 
     // Running AST per node
     for (int i = 0; i < ast_length; i++) {
@@ -218,19 +293,19 @@ void run_runtime(Node *AST, Token *p_tokens) {
         // printf("Running node %d\n", i);
         runtime(current_node, p_tokens);
         // printf("  Variable stack length: %d\n", var_num);
-        for (int j = 0; j < var_num; j++) {
-            if (var_stack[j].type == VAR_INT) {
-                // printf("  Variable %d: %s - %d\n", j, var_stack[j].name, var_stack[j].value.int_value);
-            } else if (var_stack[j].type == VAR_FLOAT) {
-                // printf("  Variable %d: %s - %f\n", j, var_stack[j].name, var_stack[j].value.float_value);
-            } else if (var_stack[j].type == VAR_STRING) {
-                // printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.string_value);
-            } else if (var_stack[j].type == VAR_BOOLEAN) {
-                // printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.boolean_value ? "True" : "False");
-            } else {
-                // printf("  Variable %d: %s - NULL\n", j, var_stack[j].name);
-            }
-        }
+        // for (int j = 0; j < var_num; j++) {
+        //     if (var_stack[j].type == VAR_INT) {
+        //         printf("  Variable %d: %s - %lld\n", j, var_stack[j].name, var_stack[j].value.int_value);
+        //     } else if (var_stack[j].type == VAR_FLOAT) {
+        //         printf("  Variable %d: %s - %f\n", j, var_stack[j].name, var_stack[j].value.float_value);
+        //     } else if (var_stack[j].type == VAR_STRING) {
+        //         printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.string_value);
+        //     } else if (var_stack[j].type == VAR_BOOLEAN) {
+        //         printf("  Variable %d: %s - %s\n", j, var_stack[j].name, var_stack[j].value.boolean_value ? "True" : "False");
+        //     } else {
+        //         printf("  Variable %d: %s - NULL\n", j, var_stack[j].name);
+        //     }
+        // }
     }
 
 }

@@ -34,6 +34,7 @@ typedef enum {
     NODE_BRACK_CLOSE,
     NODE_BREAK_STMT,
     NODE_SKIP_STMT,
+    NODE_LIST_COMMA,
     NODE_AST
 } NodeType;
 
