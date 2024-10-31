@@ -13,10 +13,10 @@ By building a programming language myself I can get a better understanding of ev
 - [x] Execution arguments
 - [x] Tokenizer
 - [x] Parser
-- [ ] Runtime
+- [x] Runtime
 - [x] Syntax Highlighting
 #### Can be done later
-- [ ] Builtins/standard library
+- [x] Builtins/standard library
 - [ ] Installer
 - [x] Documentation
 
