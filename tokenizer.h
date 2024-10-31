@@ -18,6 +18,7 @@ typedef enum {
 typedef struct {
     TokenType type;
     char *value;
+    int start;
 } Token;
 
 Token *tokenize_code(char *p_code);

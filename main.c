@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
     // Printing the version number and exiting
     if (my_flags->version) {
-        printf("Version: 02/10/2024 v0.1.0-alpha\n");
+        printf("Version: 02/10/2024 v0.2.0-alpha\n");
         free(my_flags);
         exit(0);
     }
@@ -98,10 +98,10 @@ int main(int argc, char *argv[]) {
                         printf("(%d)\tType %d\t(BOOLEAN)\t%s\n", i, p_tokens[i].type, p_tokens[i].value);
                         break;
                     case TOKEN_IDENTIFIER:
-                        printf("(%d)\tType %d\t(IDENTIFIER)\t%s\n", i, p_tokens[i].type, p_tokens[i].value);
+                        printf("(%d)\tType %d\t(IDENTIFIER)\t%s\tpos:%d\n", i, p_tokens[i].type, p_tokens[i].value, p_tokens[i].start);
                         break;
                     case TOKEN_KEYWORD:
-                        printf("(%d)\tType %d\t(KEYWORD)\t%s\n", i, p_tokens[i].type, p_tokens[i].value);
+                        printf("(%d)\tType %d\t(KEYWORD)\t%s\tpos:%d\n", i, p_tokens[i].type, p_tokens[i].value, p_tokens[i].start);
                         break;
                     case TOKEN_OPERATOR:
                         printf("(%d)\tType %d\t(OPERATOR)\t%s\n", i, p_tokens[i].type, p_tokens[i].value);

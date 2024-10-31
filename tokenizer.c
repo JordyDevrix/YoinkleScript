@@ -24,6 +24,8 @@ Token *tokenize_code(char *p_code) {
     int n_comparators = sizeof(comparators) / sizeof(comparators[0]);
     int n_keywords = sizeof(keywords) / sizeof(keywords[0]);
 
+    int line_number = 1;
+
     while (i < code_length)
     {   
         // printf("The value of p_code[%d] is: %c (%d)\n", i, p_code[i], p_code[i]);
@@ -38,6 +40,7 @@ Token *tokenize_code(char *p_code) {
         // Removing newlines
         if (p_code[i] == '\n')
         {
+            line_number++;
             i++;
             continue;
         }
@@ -383,6 +386,7 @@ Token *tokenize_code(char *p_code) {
         // Adding KEYWORDS to the token list
         for (int j = 0; j < n_keywords; j++)
         {
+            int start_i = i;
             if (strncmp(&p_code[i], keywords[j], strlen(keywords[j])) == 0)
             {
                 TokenType token_type = TOKEN_KEYWORD;
@@ -401,7 +405,7 @@ Token *tokenize_code(char *p_code) {
                     fprintf(stderr, "Memory allocation failed\n");
                     exit(1);
                 }
-                token_list[token_count] = (Token) { token_type, token_value };
+                token_list[token_count] = (Token) { token_type, token_value, line_number };
                 token_count++;
 
                 continue;
@@ -412,6 +416,7 @@ Token *tokenize_code(char *p_code) {
         if (isalpha(p_code[i]) != 0)
         {
             TokenType token_type = TOKEN_IDENTIFIER;
+            int start_i = i;
             char *token_value = (char *) malloc(256 * sizeof(char));
             if (token_value == NULL) {
                 fprintf(stderr, "Memory allocation failed\n");
@@ -447,7 +452,7 @@ Token *tokenize_code(char *p_code) {
                 fprintf(stderr, "Memory allocation failed\n");
                 exit(1);
             }
-            token_list[token_count] = (Token) { token_type, token_value };
+            token_list[token_count] = (Token) { token_type, token_value, line_number };
             token_count++;
 
             continue;
