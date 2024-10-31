@@ -94,6 +94,12 @@ void print_ast_recursive(Node *AST, Token *p_tokens) {
         case NODE_SKIP_STMT:
             printf("NODE_SKIP_STMT - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
             break;
+        case NODE_LIST_COMMA:
+            printf("NODE_LIST_COMMA - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
+            break;
+        case NODE_SHORT_CALC:
+            printf("NODE_SHORT_CALC - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
+            break;
         case NODE_AST:
             printf("NODE_AST - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
             break;
@@ -157,8 +163,37 @@ Node *parser(Token *p_tokens) {
                     p_node->end_t = i;
                     return p_node;
                 } else {
-                    p_node->type = NODE_IDENTIFIER;
+                    // Checking if next token is a + operator and the token after that is also an operator if so then its a increment operator
                     i -= 1;
+                    p_node->start_t = i-1;
+
+                    if (p_tokens[i].type == TOKEN_OPERATOR && p_tokens[i+1].type == TOKEN_OPERATOR) {
+                        p_node->type = NODE_SHORT_CALC;
+                        p_node->num_childs = 3;
+
+                        p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+
+                        p_node->childs[0].type = NODE_IDENTIFIER;
+                        p_node->childs[0].start_t = i-1;
+                        p_node->childs[0].end_t = i-1;
+                        p_node->childs[0].num_childs = 0;
+                        p_node->childs[0].childs = NULL;
+
+                        p_node->childs[1].type = NODE_OPERATOR;
+                        p_node->childs[1].start_t = i;
+                        p_node->childs[1].end_t = i;
+                        p_node->childs[1].num_childs = 0;
+                        p_node->childs[1].childs = NULL;
+
+                        i += 2;
+                        Node *p_value = parser(p_tokens);
+                        p_node->childs[2] = *p_value;
+
+                        p_node->end_t = i+1;
+                        return p_node;
+                    }
+
+                    p_node->type = NODE_IDENTIFIER;
                     p_node->end_t = i-1;
                     p_node->num_childs = 0;
                     p_node->childs = NULL;
@@ -314,6 +349,33 @@ Node *parser(Token *p_tokens) {
                     p_node->num_childs = 0;
                     p_node->childs = NULL;
 
+                    i += 1;
+                    return p_node;
+                }
+
+                // Checking for the while loop
+                if (strcmp(p_tokens[i].value, "while") == 0) {
+                    p_node = malloc(sizeof(Node));
+
+                    p_node->type = NODE_WHILE_LOOP;
+                    p_node->start_t = i;
+                    p_node->num_childs = 0;
+
+                    i += 1;
+                    // Parsing the condition
+                    Node *p_child = parser(p_tokens);
+                    p_child->type = NODE_CONDITION;
+                    p_node->num_childs += 1;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+                    p_node->childs[0] = *p_child;
+                    
+                    // Parsing the body
+                    Node *p_body = parser(p_tokens);
+                    p_node->num_childs += 1;
+                    p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
+                    p_node->childs[1] = *p_body;
+
+                    p_node->end_t = i;
                     i += 1;
                     return p_node;
                 }

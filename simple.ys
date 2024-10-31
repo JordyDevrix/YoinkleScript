@@ -3,64 +3,74 @@
 #
 This is a multi-line comment
 #
-my_value1 = to_string(22);
-my_value2 = to_int(2.5);
-my_value3 = to_float(3);
+## my_value1 = to_string(22);
+## my_value2 = to_int(2.5);
+## my_value3 = to_float(3);
 
-my_value4 = read("Jouw waarde: ");
-println("Jouw waarde: %V", my_value4);
-my_value2 = 2.5;
-my_value1 = True;
-my_value3 = 3;
-my_string = '2';
+## my_value4 = read("Jouw waarde: ");
+## println("Jouw waarde: %V", my_value4);
 
-new_value = (414532896256363441 + (0 - 414532896256363441));
+## index = to_float(100);
+## while (index > 10) {
+##     index /= 2;
+##     println("Index: %V", index);
+## };
 
-a = "Hello";
-b = a;
-a = (a + "abc");
-println("%V\t", a);
+## println("Index: %V", index);
+## print("Final index: %V\n", index);
 
-println("Hello World %V_%V Bye world %V", a, b, my_value1);
-print("hello world \b\b");
+## my_value2 = 2.5;
+## my_value1 = True;
+## my_value3 = 3;
+## my_string = '2';
 
-my_bool = 32;
-if (my_bool > 1) {
-    if (my_bool > 32) {
-        exit(1);
-    } else {
-        println("2 World %V", my_bool);
-    };
-} else {
-    println("3 World %V", my_bool);
-};
+## new_value = (414532896256363441 + (0 - 414532896256363441));
 
-## println("%V", read("Jouw waarde: "));
-waarde = 44;
+## a = "Hello";
+## b = a;
+## a = (a + "abc");
+## println("%V\t", a);
 
-task my_task2(waarde) {
-    println("\t%V", waarde);
-};
+## println("Hello World %V_%V Bye world %V", a, b, my_value1);
+## print("hello world \b\b");
 
-task my_task3(waarde) {
-    println("\t\t%V", waarde);
-};
+## my_bool = 32;
+## if (my_bool > 1) {
+##     if (my_bool > 32) {
+##         exit(1);
+##     } else {
+##         println("2 World %V", my_bool);
+##     };
+## } else {
+##     println("3 World %V", my_bool);
+## };
 
-task my_task(waarde) {
-    println("Hello World %V", waarde);
-    my_task2(waarde);
-    waarde = (waarde + 1);
-    my_task2(waarde);
-    waarde = (waarde + 1);
-    my_task2(waarde);
-    if (waarde < 1) {
-        my_task2(waarde);
-    } else {
-        my_task3(waarde);
-    };
-    return waarde;
-};
+## ## println("%V", read("Jouw waarde: "));
+## waarde = 44;
 
-waarde = my_task(waarde);
+## task my_task2(waarde) {
+##     println("\t%V", waarde);
+## };
 
-println("%V", waarde);
+## task my_task3(waarde) {
+##     println("\t\t%V", waarde);
+## };
+
+## task my_task(waarde) {
+##     println("Hello World %V", waarde);
+##     my_task2(waarde);
+##     waarde = (waarde + 1);
+##     my_task2(waarde);
+##     waarde = (waarde + 1);
+##     println("Waarde is: %V", (waarde > 1));
+##     if (waarde > 1) {
+##         println("Iets");
+##         waarde = 1;
+##     };
+##     return waarde;
+## };
+
+
+## waarde = my_task(waarde);
+
+## println("%V", waarde);
