@@ -11,13 +11,13 @@ task fib(n) {
         i += 1;
         ## exit(0);
     };
-    return int(a);
+    return a;
 };
 
 task recursive_task(n) {
     n += 1;
     println("n: %V", n);
-    if (n < 100) {
+    if (n < 10) {
         result = recursive_task(n);
     } else {
         result = n;
@@ -25,11 +25,14 @@ task recursive_task(n) {
     return result;
 };
 
-println("Result: %V\n", recursive_task(0));
+task main() {
+    n = 10; ## Size of the fibonacci sequence
 
-println("Result: %V", fib(10));
-println("Result: %V", fib(20));
+    result = fib(n);
+    println("fib(%V) = %V", n, result);
 
-println("%V", fib(20) > fib(10));
+    result = recursive_task(0);
+    println("recursive_task(%V) = %V", 0, result);
+};
 
-
+main();

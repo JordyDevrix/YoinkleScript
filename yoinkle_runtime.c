@@ -384,102 +384,103 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
 
         case NODE_CONDITION:
             ;
-            if (NODE->num_childs == 3) {
-                Variable *left_cond = runtime(&NODE->childs[0], p_tokens, AST);
-                Variable *right_cond = runtime(&NODE->childs[2], p_tokens, AST);
-                Variable *result_cond = malloc(sizeof(Variable));
-                result_cond->name = NULL;
-                if (left_cond->type == VAR_INT && right_cond->type == VAR_INT) {
-                    result_cond->type = VAR_BOOLEAN;
-                    if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value == right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value != right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
-                        printf("Node childs: %d\n", NODE->childs[2].type == NODE_FUNC_CALL);
-                        printf("left_cond: %d value: %d\n", left_cond->type, left_cond->value.int_value);
-                        printf("right_cond: %d value: %d\n", right_cond->type, right_cond->value.int_value);
-                        result_cond->value.boolean_value = left_cond->value.int_value > right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value < right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value >= right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value <= right_cond->value.int_value;
-                    }
-                } else if (left_cond->type == VAR_FLOAT && right_cond->type == VAR_FLOAT) {
-                    result_cond->type = VAR_BOOLEAN;
-                    if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value == right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value != right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value > right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value < right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value >= right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value <= right_cond->value.float_value;
-                    }
-                } else if (left_cond->type == VAR_FLOAT && right_cond->type == VAR_INT) {
-                    result_cond->type = VAR_BOOLEAN;
-                    if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value == right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value != right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value > right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value < right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value >= right_cond->value.int_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.float_value <= right_cond->value.int_value;
-                    }
-                } else if (left_cond->type == VAR_INT && right_cond->type == VAR_FLOAT) {
-                    result_cond->type = VAR_BOOLEAN;
-                    if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value == right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value != right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value > right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value < right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value >= right_cond->value.float_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.int_value <= right_cond->value.float_value;
-                    }
-                } else if (left_cond->type == VAR_BOOLEAN && right_cond->type == VAR_BOOLEAN) {
-                    result_cond->type = VAR_BOOLEAN;
-                    if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.boolean_value == right_cond->value.boolean_value;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
-                        result_cond->value.boolean_value = left_cond->value.boolean_value != right_cond->value.boolean_value;
-                    }
-                } else if (left_cond->type == VAR_STRING && right_cond->type == VAR_STRING) {
-                    result_cond->type = VAR_BOOLEAN;
-                    if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
-                        result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) == 0;
-                    } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
-                        result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) != 0;
-                    }
-                } else {
-                    
-                    printf(
-                        "\033[1;31m\nError at line %d: CompareError\n\tCannot compare conditions of type %s and %s\n\033[0m",
-                        p_tokens[NODE->childs[0].start_t].start,
-                        left_cond->type == VAR_INT ? "int" : left_cond->type == VAR_FLOAT ? "float" : left_cond->type == VAR_STRING ? "string" : left_cond->type == VAR_BOOLEAN ? "boolean" : "null",
-                        right_cond->type == VAR_INT ? "int" : right_cond->type == VAR_FLOAT ? "float" : right_cond->type == VAR_STRING ? "string" : right_cond->type == VAR_BOOLEAN ? "boolean" : "null"
-                    );
-                    exit(1);
-                }
-                return result_cond;
-            } else {
+            if (NODE->num_childs == 1) {
                 return runtime(&NODE->childs[0], p_tokens, AST);
             }
+
+            Variable *left_cond = runtime(&NODE->childs[0], p_tokens, AST);
+            Variable *right_cond = runtime(&NODE->childs[2], p_tokens, AST);
+            Variable *result_cond = malloc(sizeof(Variable));
+            result_cond->name = NULL;
+            if (left_cond->type == VAR_INT && right_cond->type == VAR_INT) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value == right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value != right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                    // printf("Node childs: %d\n", NODE->childs[2].type == NODE_FUNC_CALL);
+                    // printf("left_cond: %d value: %d\n", left_cond->type, left_cond->value.int_value);
+                    // printf("right_cond: %d value: %d\n", right_cond->type, right_cond->value.int_value);
+                    result_cond->value.boolean_value = left_cond->value.int_value > right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value < right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value >= right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value <= right_cond->value.int_value;
+                }
+            } else if (left_cond->type == VAR_FLOAT && right_cond->type == VAR_FLOAT) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value == right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value != right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value > right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value < right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value >= right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value <= right_cond->value.float_value;
+                }
+            } else if (left_cond->type == VAR_FLOAT && right_cond->type == VAR_INT) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value == right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value != right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value > right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value < right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value >= right_cond->value.int_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.float_value <= right_cond->value.int_value;
+                }
+            } else if (left_cond->type == VAR_INT && right_cond->type == VAR_FLOAT) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value == right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value != right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value > right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value < right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value >= right_cond->value.float_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.int_value <= right_cond->value.float_value;
+                }
+            } else if (left_cond->type == VAR_BOOLEAN && right_cond->type == VAR_BOOLEAN) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.boolean_value == right_cond->value.boolean_value;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = left_cond->value.boolean_value != right_cond->value.boolean_value;
+                }
+            } else if (left_cond->type == VAR_STRING && right_cond->type == VAR_STRING) {
+                result_cond->type = VAR_BOOLEAN;
+                if (strcmp(p_tokens[NODE->childs[1].start_t].value, "==") == 0) {
+                    result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) == 0;
+                } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
+                    result_cond->value.boolean_value = strcmp(left_cond->value.string_value, right_cond->value.string_value) != 0;
+                }
+            } else {
+                
+                printf(
+                    "\033[1;31m\nError at line %d: CompareError\n\tCannot compare conditions of type %s and %s\n\033[0m",
+                    p_tokens[NODE->childs[0].start_t].start,
+                    left_cond->type == VAR_INT ? "int" : left_cond->type == VAR_FLOAT ? "float" : left_cond->type == VAR_STRING ? "string" : left_cond->type == VAR_BOOLEAN ? "boolean" : "null",
+                    right_cond->type == VAR_INT ? "int" : right_cond->type == VAR_FLOAT ? "float" : right_cond->type == VAR_STRING ? "string" : right_cond->type == VAR_BOOLEAN ? "boolean" : "null"
+                );
+                exit(1);
+            }
+            return result_cond;
+            
         case NODE_FUNC_DECL:
             ;
             // Getting the function name

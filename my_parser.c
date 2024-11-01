@@ -125,19 +125,76 @@ Node *parser(Token *p_tokens) {
 
         switch (p_tokens[i].type) {
             case TOKEN_IDENTIFIER:
-                // printf("identifier %s\n", p_tokens[i].value);
+                // Check if next token is parenthesis
+                if (p_tokens[i+1].type == TOKEN_SYMBOL && strcmp(p_tokens[i+1].value, "(") == 0) {
+                    p_node = malloc(sizeof(Node));
+                    p_node->type = NODE_FUNC_CALL;
+                    p_node->start_t = i;
+                    p_node->num_childs = 1;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+                    p_node->childs[0].type = NODE_ARGS;
+                    p_node->childs[0].start_t = i+2;
+                    p_node->childs[0].end_t = i+2;
+                    p_node->childs[0].num_childs = 0;
+                    p_node->childs[0].childs = NULL;
+
+                    // Parsing the arguments and adding them to the NODE_ARGS node
+                    i += 2;
+                    int childs_pos = 0;
+                    for (int j = 0; p_tokens[i].type != TOKEN_NULL; j++) {
+                        Node *p_child = parser(p_tokens);
+                        if (p_child->type == NODE_PAREN_CLOSE) {
+                            break;
+                        } else if (p_child->type == NODE_LIST_COMMA) {
+                            continue;
+                        } else {
+                            p_node->childs[0].childs = realloc(p_node->childs[0].childs, (childs_pos + 1) * sizeof(Node));
+                            p_node->childs[0].childs[childs_pos] = *p_child;
+                            p_node->childs[0].num_childs += 1;
+                            childs_pos++;
+                        }
+                    }
+
+                    if (p_tokens[i].type == TOKEN_OPERATOR || p_tokens[i].type == TOKEN_COMPARATOR) {
+                        Node *p_expr = malloc(sizeof(Node));
+                        if (p_tokens[i].type == TOKEN_OPERATOR) {
+                            p_expr->type = NODE_BIN_EXPR;
+                        } else {
+                            p_expr->type = NODE_CONDITION;
+                        }
+                        p_expr->start_t = i;
+                        p_expr->num_childs = 3;
+                        p_expr->childs = malloc(p_expr->num_childs * sizeof(Node));
+
+                        p_expr->childs[0] = *p_node;
+
+                        if (p_tokens[i].type == TOKEN_OPERATOR) {
+                            p_expr->childs[1].type = NODE_OPERATOR;
+                        } else {
+                            p_expr->childs[1].type = NODE_COMPARE;
+                        }
+                        p_expr->childs[1].start_t = i;
+                        p_expr->childs[1].end_t = i;
+                        p_expr->childs[1].num_childs = 0;
+                        p_expr->childs[1].childs = NULL;
+
+                        i += 1;
+                        Node *p_value = parser(p_tokens);
+                        p_expr->childs[2] = *p_value;
+
+                        p_expr->end_t = i;
+                        return p_expr;
+                    }
+                    p_node->end_t = i;
+                    return p_node;
+                } 
                 ;
                 p_node = malloc(sizeof(Node));
-
-                // Define the parent node (which could be a variable)
                 p_node->start_t = i;
-
-                // Increase index by one to get the next token
                 i += 1;
                 Node *p_next = malloc(sizeof(Node));
                 p_next = parser(p_tokens);
                 if ((p_next->type == NODE_ASSIGN)) {
-                    printf("Next node type: %d\n", p_next->type);
                     p_node->type = NODE_VAR_DECL;
                     p_node->num_childs = 2;
                     p_node->childs = malloc(p_node->num_childs * sizeof(Node));
@@ -154,18 +211,8 @@ Node *parser(Token *p_tokens) {
 
                     p_node->end_t = i;
                     return p_node;
-                } else if (p_next->type == NODE_BIN_EXPR) {
-                    printf("Next node type: %d\n", p_next[0].type);
-                    p_node->type = NODE_FUNC_CALL;
-                    p_node->num_childs = 1;
-                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
-                    p_next->type = NODE_ARGS;
-                    p_node->childs[0] = *p_next;
-
-                    p_node->end_t = i;
-                    return p_node;
                 } else {
-                    // Checking if next token is a + operator and the token after that is also an operator if so then its a increment operator
+                    // Checking if next token is an operator and the token after that is also an operator if so then its a increment operator
                     i -= 1;
                     p_node->start_t = i-1;
 
@@ -196,8 +243,12 @@ Node *parser(Token *p_tokens) {
                     }
 
                     // Check if the next token is an operator
-                    if (p_tokens[i].type == TOKEN_OPERATOR) {
-                        p_node->type = NODE_BIN_EXPR;
+                    if (p_tokens[i].type == TOKEN_OPERATOR || p_tokens[i].type == TOKEN_COMPARATOR) {
+                        if (p_tokens[i].type == TOKEN_OPERATOR) {
+                            p_node->type = NODE_BIN_EXPR;
+                        } else {
+                            p_node->type = NODE_CONDITION;
+                        }
                         p_node->num_childs = 3;
 
                         p_node->childs = malloc(p_node->num_childs * sizeof(Node));
@@ -208,7 +259,11 @@ Node *parser(Token *p_tokens) {
                         p_node->childs[0].num_childs = 0;
                         p_node->childs[0].childs = NULL;
 
-                        p_node->childs[1].type = NODE_OPERATOR;
+                        if (p_tokens[i].type == TOKEN_OPERATOR) {
+                            p_node->childs[1].type = NODE_OPERATOR;
+                        } else {
+                            p_node->childs[1].type = NODE_COMPARE;
+                        }
                         p_node->childs[1].start_t = i;
                         p_node->childs[1].end_t = i;
                         p_node->childs[1].num_childs = 0;
@@ -227,15 +282,6 @@ Node *parser(Token *p_tokens) {
                     p_node->num_childs = 0;
                     p_node->childs = NULL;
 
-                    // else {
-                    //     if (p_node->childs[1].type == NODE_COMPARE) {
-                    //         p_node->type = NODE_CONDITION;
-                    //         return p_node;
-                    //     } else {
-                    //         return p_node;
-                    //     }
-                    // }
-
                     return p_node;
                 }
 
@@ -244,7 +290,6 @@ Node *parser(Token *p_tokens) {
                 i += 1;
                 return p_node;
             case TOKEN_OPERATOR:
-                // printf("Operator: %s\n", p_tokens[i].value);
                 if (strcmp(p_tokens[i].value, "=") == 0) {
                     p_node = malloc(sizeof(Node));
 
@@ -607,7 +652,7 @@ Node *parser(Token *p_tokens) {
                 p_next = malloc(sizeof(Node));
                 p_next = parser(p_tokens);
 
-                if (p_next->type == NODE_OPERATOR) {
+                if (p_next->type == NODE_OPERATOR || p_next->type == NODE_COMPARE) {
                     if (p_next->type == NODE_COMPARE) {
                         p_node->type = NODE_CONDITION;
                     } else {
@@ -715,7 +760,7 @@ Node *parser(Token *p_tokens) {
                 p_next = malloc(sizeof(Node));
                 p_next = parser(p_tokens);
 
-                if (p_next->type == NODE_OPERATOR) {
+                if (p_next->type == NODE_OPERATOR || p_next->type == NODE_COMPARE) {
                     if (p_next->type == NODE_COMPARE) {
                         p_node->type = NODE_CONDITION;
                     } else {
@@ -769,7 +814,7 @@ Node *parser(Token *p_tokens) {
                 p_next = malloc(sizeof(Node));
                 p_next = parser(p_tokens);
 
-                if (p_next->type == NODE_OPERATOR) {
+                if (p_next->type == NODE_OPERATOR || p_next->type == NODE_COMPARE) {
                     if (p_next->type == NODE_COMPARE) {
                         p_node->type = NODE_CONDITION;
                     } else {
