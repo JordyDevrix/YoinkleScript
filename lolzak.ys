@@ -30,6 +30,6 @@ println("Result: %V\n", recursive_task(0));
 println("Result: %V", fib(10));
 println("Result: %V", fib(20));
 
-println("%V", (fib(20) > fib(10)));
+println("%V", fib(20) > fib(10));
 
 
