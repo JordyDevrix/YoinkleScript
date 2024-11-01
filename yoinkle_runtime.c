@@ -17,9 +17,10 @@ int return_found = 0;
 
 Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
     switch (NODE->type) {
-        Variable *new_var;
+
         case NODE_VAR_DECL:
             ;
+            Variable *new_var;
             char *var_name = p_tokens[NODE->childs[0].start_t].value;
 
             // Getting the second child of the node
@@ -29,21 +30,21 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
             int variable_exists = 0;
             for (int i = 0; i < var_num; i++) {
                 if (strcmp(var_stack[i].name, var_name) == 0) {
-                    // Changing the value of the variable
-                    new_var->name = var_name;
-                    var_stack[i] = *new_var;
                     variable_exists = 1;
+                    var_stack[i].value = new_var->value;
+                    var_stack[i].type = new_var->type;
+                    break;
                 }
             }
             if (variable_exists) {
                 break;
+            } else {
+                var_stack = realloc(var_stack, sizeof(Variable) * (var_num + 1));
+                var_stack[var_num] = *new_var;
+                var_stack[var_num].name = var_name;
+                var_num++;
+                break;
             }
-            
-            var_stack = realloc(var_stack, sizeof(Variable) * (var_num + 1));
-            var_stack[var_num] = *new_var;
-            var_stack[var_num].name = var_name;
-            var_num++;
-            break;
         case NODE_STR_LITERAL:
             ;
             char *string_value = p_tokens[NODE->start_t].value;
@@ -90,20 +91,21 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
         case NODE_IDENTIFIER:
             ;
             char *identifier = p_tokens[NODE->start_t].value;
-            int var_found = 0;
             for (int i = 0; i < var_num; i++) {
                 if (strcmp(var_stack[i].name, identifier) == 0) {
                     return &var_stack[i];
-                    var_found = 1;
+                    break;
                 }
             }
-            if (!var_found) {
-                printf("\033[1;31m\nError at line %d:\n\tVariable '%s' does not exist\n\033[0m", p_tokens[NODE->start_t].start, identifier);
-                exit(1);
-            }
+            printf("\033[1;31m\nError at line %d:\n\tVariable '%s' does not exist\n\033[0m", p_tokens[NODE->start_t].start, identifier);
+            exit(1);
             break;
         case NODE_BIN_EXPR:
             ;
+            if (NODE->num_childs == 1) {
+                return runtime(&NODE->childs[0], p_tokens, AST);
+            }
+
             Variable *left = runtime(&NODE->childs[0], p_tokens, AST);
             Variable *right = runtime(&NODE->childs[2], p_tokens, AST);
             Variable *result = malloc(sizeof(Variable));
@@ -257,14 +259,17 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 new_var->type = VAR_STRING;
                 new_var->value.string_value = input;
                 return new_var;
-            } else if (strcmp(func_name, "to_int") == 0) {
+            } else if (strcmp(func_name, "int") == 0) {
                 new_var = yoinkle_std_value_to_int(&args[0]);
                 return new_var;
-            } else if (strcmp(func_name, "to_float") == 0) {
+            } else if (strcmp(func_name, "float") == 0) {
                 new_var = yoinkle_std_value_to_float(&args[0]);
                 return new_var;
-            } else if (strcmp(func_name, "to_string") == 0) {
+            } else if (strcmp(func_name, "string") == 0) {
                 new_var = yoinkle_std_value_to_string(&args[0]);
+                return new_var;
+            } else if (strcmp(func_name, "bool") == 0) {
+                new_var = yoinkle_std_value_to_bool(&args[0]);
                 return new_var;
             } else if (strcmp(func_name, "timestmp") == 0) {
                 char *format_string = NULL;
@@ -278,6 +283,7 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 int function_found = 0;
                 for (int i = 0; i < function_num; i++) {
                     if (strcmp(func_name, function_stack[i].name) == 0) {
+                        // printf("Function found with name: %s\n", func_name);
                         function_found = 1;
                         Node *function_args = function_stack[i].node->childs[0].childs[0].childs;
                         Node *function_body = function_stack[i].node->childs;
@@ -390,6 +396,9 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                     } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "!=") == 0) {
                         result_cond->value.boolean_value = left_cond->value.int_value != right_cond->value.int_value;
                     } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, ">") == 0) {
+                        printf("Node childs: %d\n", NODE->childs[2].type == NODE_FUNC_CALL);
+                        printf("left_cond: %d value: %d\n", left_cond->type, left_cond->value.int_value);
+                        printf("right_cond: %d value: %d\n", right_cond->type, right_cond->value.int_value);
                         result_cond->value.boolean_value = left_cond->value.int_value > right_cond->value.int_value;
                     } else if (strcmp(p_tokens[NODE->childs[1].start_t].value, "<") == 0) {
                         result_cond->value.boolean_value = left_cond->value.int_value < right_cond->value.int_value;

@@ -453,6 +453,22 @@ Variable *yoinkle_std_value_to_string(Variable *var) {
     return new_var;
 }
 
+Variable *yoinkle_std_value_to_bool(Variable *var) {
+    Variable *new_var = malloc(sizeof(Variable));
+    new_var->name = NULL;
+    new_var->type = VAR_BOOLEAN;
+    if (var->type == VAR_INT) {
+        new_var->value.boolean_value = var->value.int_value != 0 ? 1 : 0;
+    } else if (var->type == VAR_FLOAT) {
+        new_var->value.boolean_value = var->value.float_value != 0.0 ? 1 : 0;
+    } else if (var->type == VAR_STRING) {
+        new_var->value.boolean_value = strcmp(var->value.string_value, "") != 0 ? 1 : 0;
+    } else if (var->type == VAR_BOOLEAN) {
+        new_var->value.boolean_value = var->value.boolean_value;
+    }
+    return new_var;
+}
+
 Variable *yoinkle_std_get_system_time(char *format_string) {
     if (format_string == NULL) {
         time_t t = time(NULL);

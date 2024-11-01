@@ -3,13 +3,6 @@
 #
 This is a multi-line comment
 #
-my_value1 = to_string(22);
-my_value2 = to_int(2.5);
-my_value3 = to_float(3);
-
-my_value4 = read("Jouw waarde: ");
-println("Jouw waarde: %V", my_value4);
-
 index = to_float(100);
 while (index > 10) {
     index /= 2;
@@ -52,14 +45,8 @@ task my_task2(waarde) {
     println("\t%V", waarde);
 };
 
-task my_task3(waarde) {
-    println("\t\t%V", waarde);
-};
-
 task my_task(waarde) {
     println("Hello World %V", waarde);
-    my_task2(waarde);
-    waarde = (waarde + 1);
     my_task2(waarde);
     waarde = (waarde + 1);
     println("Waarde is: %V", (waarde > 1));

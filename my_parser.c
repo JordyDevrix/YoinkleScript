@@ -136,8 +136,8 @@ Node *parser(Token *p_tokens) {
                 i += 1;
                 Node *p_next = malloc(sizeof(Node));
                 p_next = parser(p_tokens);
-                // printf("Next node type: %d\n", p_next->type);s
                 if ((p_next->type == NODE_ASSIGN)) {
+                    printf("Next node type: %d\n", p_next->type);
                     p_node->type = NODE_VAR_DECL;
                     p_node->num_childs = 2;
                     p_node->childs = malloc(p_node->num_childs * sizeof(Node));
@@ -154,14 +154,15 @@ Node *parser(Token *p_tokens) {
 
                     p_node->end_t = i;
                     return p_node;
-                } else if ((p_next->type == NODE_BIN_EXPR)) {
+                } else if (p_next->type == NODE_BIN_EXPR) {
+                    printf("Next node type: %d\n", p_next[0].type);
                     p_node->type = NODE_FUNC_CALL;
                     p_node->num_childs = 1;
                     p_node->childs = malloc(p_node->num_childs * sizeof(Node));
                     p_next->type = NODE_ARGS;
                     p_node->childs[0] = *p_next;
-                    p_node->end_t = i;
 
+                    p_node->end_t = i;
                     return p_node;
                 } else {
                     // Checking if next token is a + operator and the token after that is also an operator if so then its a increment operator
@@ -194,10 +195,47 @@ Node *parser(Token *p_tokens) {
                         return p_node;
                     }
 
+                    // Check if the next token is an operator
+                    if (p_tokens[i].type == TOKEN_OPERATOR) {
+                        p_node->type = NODE_BIN_EXPR;
+                        p_node->num_childs = 3;
+
+                        p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+
+                        p_node->childs[0].type = NODE_IDENTIFIER;
+                        p_node->childs[0].start_t = i-1;
+                        p_node->childs[0].end_t = i-1;
+                        p_node->childs[0].num_childs = 0;
+                        p_node->childs[0].childs = NULL;
+
+                        p_node->childs[1].type = NODE_OPERATOR;
+                        p_node->childs[1].start_t = i;
+                        p_node->childs[1].end_t = i;
+                        p_node->childs[1].num_childs = 0;
+                        p_node->childs[1].childs = NULL;
+
+                        i += 1;
+                        Node *p_value = parser(p_tokens);
+                        p_node->childs[2] = *p_value;
+
+                        p_node->end_t = i;
+                        return p_node;
+                    } 
+
                     p_node->type = NODE_IDENTIFIER;
                     p_node->end_t = i-1;
                     p_node->num_childs = 0;
                     p_node->childs = NULL;
+
+                    // else {
+                    //     if (p_node->childs[1].type == NODE_COMPARE) {
+                    //         p_node->type = NODE_CONDITION;
+                    //         return p_node;
+                    //     } else {
+                    //         return p_node;
+                    //     }
+                    // }
+
                     return p_node;
                 }
 
@@ -436,13 +474,13 @@ Node *parser(Token *p_tokens) {
                 }
 
                 if (strcmp(p_tokens[i].value, "(") == 0) {
-                    p_node = malloc(sizeof(Node));
+                    Node *p_first = malloc(sizeof(Node));
 
-                    p_node->type = NODE_BIN_EXPR;
-                    p_node->start_t = i;
-                    p_node->end_t = i;
-                    p_node->num_childs = 0;
-                    p_node->childs = NULL;
+                    p_first->type = NODE_BIN_EXPR;
+                    p_first->start_t = i;
+                    p_first->end_t = i;
+                    p_first->num_childs = 0;
+                    p_first->childs = NULL;
 
                     i += 1;
                     int childs_pos = 0;
@@ -453,23 +491,44 @@ Node *parser(Token *p_tokens) {
                         } else if (p_child->type == NODE_LIST_COMMA) {
                             continue;
                         } else {
-                            p_node->num_childs += 1;
+                            p_first->num_childs += 1;
 
-                            p_node->childs = realloc(p_node->childs, p_node->num_childs * sizeof(Node));
-                            if (p_node->childs == NULL) {
+                            p_first->childs = realloc(p_first->childs, p_first->num_childs * sizeof(Node));
+                            if (p_first->childs == NULL) {
                                 printf("Error: Could not allocate memory for bin expr\n");
                                 exit(1);
                             }
-                            p_node->childs[childs_pos] = *p_child;
+                            p_first->childs[childs_pos] = *p_child;
                             childs_pos += 1;
                         }
                     }
-                    if (p_node->num_childs > 1) {
-                        if (p_node->childs[1].type == NODE_COMPARE) {
-                            p_node->type = NODE_CONDITION;
+
+                    // Check if the next token is an operator
+                    if (p_tokens[i].type == TOKEN_OPERATOR) {
+                        Node *p_operator = malloc(sizeof(Node));
+                        p_operator->type = NODE_OPERATOR;
+                        p_operator->start_t = i;
+                        p_operator->end_t = i;
+                        p_operator->num_childs = 0;
+                        p_operator->childs = NULL;
+
+                        i += 1;
+                        Node *p_child_value = parser(p_tokens);
+                        p_first->num_childs += 1;
+                        p_first->childs = realloc(p_first->childs, p_first->num_childs * sizeof(Node));
+                        p_first->childs[childs_pos] = *p_operator;
+                        p_first->num_childs += 1;
+                        p_first->childs = realloc(p_first->childs, p_first->num_childs * sizeof(Node));
+                        p_first->childs[childs_pos+1] = *p_child_value;
+                        return p_first;
+                    } else {
+                        if (p_first->childs[1].type == NODE_COMPARE) {
+                            p_first->type = NODE_CONDITION;
+                            return p_first;
+                        } else {
+                            return p_first;
                         }
                     }
-                    return p_node;
                 }
 
                 if (strcmp(p_tokens[i].value, ")") == 0) {
@@ -538,98 +597,221 @@ Node *parser(Token *p_tokens) {
                     return p_node;
                 }
             case TOKEN_STRING:
-                // printf("String: %s\n", p_tokens[i].value);
-                p_node = malloc(sizeof(Node));
-
-                p_node->type = NODE_STR_LITERAL;
-                p_node->start_t = i;
-                p_node->end_t = i;
-                p_node->num_childs = 0;
-                p_node->childs = NULL;
-
-                i += 1;
-                return p_node;
-            case TOKEN_INTEGER:
-                p_node = malloc(sizeof(Node));
-
-                p_node->type = NODE_INT_LITERAL;
-                p_node->start_t = i;
-                p_node->end_t = i;
-                p_node->num_childs = 0;
-                p_node->childs = NULL;
-
-                i += 1;
-                return p_node;
-
                 // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
 
-                // p_node = malloc(sizeof(Node));
-                // p_node->start_t = i;
+                p_node = malloc(sizeof(Node));
+                p_node->start_t = i;
 
-                // // Check if next token is a operator
-                // i++;
-                // p_next = malloc(sizeof(Node));
-                // p_next = parser(p_tokens);
+                // Check if next token is a operator
+                i++;
+                p_next = malloc(sizeof(Node));
+                p_next = parser(p_tokens);
 
-                // if (p_next->type == NODE_OPERATOR) {
-                //     p_node->type = NODE_BIN_EXPR;
-                //     p_node->num_childs = 3;
-                //     p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+                if (p_next->type == NODE_OPERATOR) {
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->type = NODE_CONDITION;
+                    } else {
+                        p_node->type = NODE_BIN_EXPR;
+                    }
+                    p_node->num_childs = 3;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
 
-                //     // integer
-                //     p_node->childs[0].type = NODE_INT_LITERAL;
-                //     p_node->childs[0].start_t = p_node->start_t;
-                //     p_node->childs[0].end_t = p_node->start_t;
-                //     p_node->childs[0].num_childs = 0;
-                //     p_node->childs[0].childs = NULL;
+                    // integer
+                    p_node->childs[0].type = NODE_STR_LITERAL;
+                    p_node->childs[0].start_t = p_node->start_t;
+                    p_node->childs[0].end_t = p_node->start_t;
+                    p_node->childs[0].num_childs = 0;
+                    p_node->childs[0].childs = NULL;
 
-                //     // operator
-                //     p_node->childs[1].type = NODE_OPERATOR;
-                //     p_node->childs[1].start_t = p_node->start_t+1;
-                //     p_node->childs[1].end_t = p_node->start_t+1;
-                //     p_node->childs[1].num_childs = 0;
-                //     p_node->childs[1].childs = NULL;
+                    // operator
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->childs[1].type = NODE_COMPARE;
+                    } else {
+                        p_node->childs[1].type = NODE_OPERATOR;
+                    }
+                    p_node->childs[1].start_t = p_node->start_t+1;
+                    p_node->childs[1].end_t = p_node->start_t+1;
+                    p_node->childs[1].num_childs = 0;
+                    p_node->childs[1].childs = NULL;
 
-                //     Node *p_child_value = parser(p_tokens);
-                //     p_node->childs[2] = *p_child_value;
+                    Node *p_child_value = parser(p_tokens);
+                    p_node->childs[2] = *p_child_value;
 
-                //     p_node->end_t = i;
-                //     return p_node;
-                // } else {
-                //     p_node->type = NODE_INT_LITERAL;
-                //     i -= 1;
-                //     p_node->start_t = i-1;
-                //     p_node->end_t = i-1;
-                //     p_node->num_childs = 0;
-                //     p_node->childs = NULL;
-                //     return p_node;
-                // }
+                    p_node->end_t = i;
+                    return p_node;
+                } else {
+                    p_node->type = NODE_STR_LITERAL;
+                    i -= 1;
+                    p_node->start_t = i-1;
+                    p_node->end_t = i-1;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
+                    return p_node;
+                }
 
-                // return p_node;
+                // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
+            case TOKEN_INTEGER:
+                // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
+
+                p_node = malloc(sizeof(Node));
+                p_node->start_t = i;
+
+                // Check if next token is a operator
+                i++;
+                p_next = malloc(sizeof(Node));
+                p_next = parser(p_tokens);
+
+                if (p_next->type == NODE_OPERATOR || p_next->type == NODE_COMPARE) {
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->type = NODE_CONDITION;
+                    } else {
+                        p_node->type = NODE_BIN_EXPR;
+                    }
+                    p_node->num_childs = 3;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+
+                    // integer
+                    p_node->childs[0].type = NODE_INT_LITERAL;
+                    p_node->childs[0].start_t = p_node->start_t;
+                    p_node->childs[0].end_t = p_node->start_t;
+                    p_node->childs[0].num_childs = 0;
+                    p_node->childs[0].childs = NULL;
+
+                    // operator
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->childs[1].type = NODE_COMPARE;
+                    } else {
+                        p_node->childs[1].type = NODE_OPERATOR;
+                    }
+                    p_node->childs[1].start_t = p_node->start_t+1;
+                    p_node->childs[1].end_t = p_node->start_t+1;
+                    p_node->childs[1].num_childs = 0;
+                    p_node->childs[1].childs = NULL;
+
+                    Node *p_child_value = parser(p_tokens);
+                    p_node->childs[2] = *p_child_value;
+
+                    p_node->end_t = i;
+                    return p_node;
+                } else {
+                    p_node->type = NODE_INT_LITERAL;
+                    i -= 1;
+                    p_node->start_t = i-1;
+                    p_node->end_t = i-1;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
+                    return p_node;
+                }
 
                 // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
             case TOKEN_FLOAT:
+                // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
+
                 p_node = malloc(sizeof(Node));
-
-                p_node->type = NODE_FLT_LITERAL;
                 p_node->start_t = i;
-                p_node->end_t = i;
-                p_node->num_childs = 0;
-                p_node->childs = NULL;
 
-                i += 1;
-                return p_node;
+                // Check if next token is a operator
+                i++;
+                p_next = malloc(sizeof(Node));
+                p_next = parser(p_tokens);
+
+                if (p_next->type == NODE_OPERATOR) {
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->type = NODE_CONDITION;
+                    } else {
+                        p_node->type = NODE_BIN_EXPR;
+                    }
+                    p_node->num_childs = 3;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+
+                    // integer
+                    p_node->childs[0].type = NODE_FLT_LITERAL;
+                    p_node->childs[0].start_t = p_node->start_t;
+                    p_node->childs[0].end_t = p_node->start_t;
+                    p_node->childs[0].num_childs = 0;
+                    p_node->childs[0].childs = NULL;
+
+                    // operator
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->childs[1].type = NODE_COMPARE;
+                    } else {
+                        p_node->childs[1].type = NODE_OPERATOR;
+                    }
+                    p_node->childs[1].start_t = p_node->start_t+1;
+                    p_node->childs[1].end_t = p_node->start_t+1;
+                    p_node->childs[1].num_childs = 0;
+                    p_node->childs[1].childs = NULL;
+
+                    Node *p_child_value = parser(p_tokens);
+                    p_node->childs[2] = *p_child_value;
+
+                    p_node->end_t = i;
+                    return p_node;
+                } else {
+                    p_node->type = NODE_FLT_LITERAL;
+                    i -= 1;
+                    p_node->start_t = i-1;
+                    p_node->end_t = i-1;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
+                    return p_node;
+                }
+
+                // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
             case TOKEN_BOOLEAN:
+                // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
+
                 p_node = malloc(sizeof(Node));
-
-                p_node->type = NODE_BOOL_LITERAL;
                 p_node->start_t = i;
-                p_node->end_t = i;
-                p_node->num_childs = 0;
-                p_node->childs = NULL;
 
-                i += 1;
-                return p_node;
+                // Check if next token is a operator
+                i++;
+                p_next = malloc(sizeof(Node));
+                p_next = parser(p_tokens);
+
+                if (p_next->type == NODE_OPERATOR) {
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->type = NODE_CONDITION;
+                    } else {
+                        p_node->type = NODE_BIN_EXPR;
+                    }
+                    p_node->num_childs = 3;
+                    p_node->childs = malloc(p_node->num_childs * sizeof(Node));
+
+                    // integer
+                    p_node->childs[0].type = NODE_BOOL_LITERAL;
+                    p_node->childs[0].start_t = p_node->start_t;
+                    p_node->childs[0].end_t = p_node->start_t;
+                    p_node->childs[0].num_childs = 0;
+                    p_node->childs[0].childs = NULL;
+
+                    // operator
+                    if (p_next->type == NODE_COMPARE) {
+                        p_node->childs[1].type = NODE_COMPARE;
+                    } else {
+                        p_node->childs[1].type = NODE_OPERATOR;
+                    }
+                    p_node->childs[1].start_t = p_node->start_t+1;
+                    p_node->childs[1].end_t = p_node->start_t+1;
+                    p_node->childs[1].num_childs = 0;
+                    p_node->childs[1].childs = NULL;
+
+                    Node *p_child_value = parser(p_tokens);
+                    p_node->childs[2] = *p_child_value;
+
+                    p_node->end_t = i;
+                    return p_node;
+                } else {
+                    p_node->type = NODE_BOOL_LITERAL;
+                    i -= 1;
+                    p_node->start_t = i-1;
+                    p_node->end_t = i-1;
+                    p_node->num_childs = 0;
+                    p_node->childs = NULL;
+                    return p_node;
+                }
+
+                // TEMPLATE FOR WHEN PROPER BINARY EXPRESSIONS WILL BE ADDED //
             default:
                 printf("Unkown token: %s\n", p_tokens[i].value);
                 exit(1);

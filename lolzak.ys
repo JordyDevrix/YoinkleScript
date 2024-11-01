@@ -1,23 +1,35 @@
 ## Lets create a fibonacci sequence
 
-task add(n) {
-    return n+=3;
-};
-
-task function(n) {
-    while (n < 10) {
-        n-=1;
-        n = add(n);
-        println("N: %V", n);
+task fib(n) {
+    a = 0;
+    b = 1;
+    i = 0;
+    while (i < n) {
+        temp = b;
+        b = a + b;
+        a = temp;
+        i += 1;
+        ## exit(0);
     };
-    return n;
+    return int(a);
 };
 
-println("Function: %V", function(0));
+task recursive_task(n) {
+    n += 1;
+    println("n: %V", n);
+    if (n < 100) {
+        result = recursive_task(n);
+    } else {
+        result = n;
+    };
+    return result;
+};
 
-println("Function: %V", timestmp("%s"));
+println("Result: %V\n", recursive_task(0));
 
+println("Result: %V", fib(10));
+println("Result: %V", fib(20));
 
-
+println("%V", (fib(20) > fib(10)));
 
 

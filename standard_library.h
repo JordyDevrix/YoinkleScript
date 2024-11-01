@@ -11,6 +11,7 @@ char *yoinkle_std_read(char *prompt);
 Variable *yoinkle_std_value_to_int(Variable *var);
 Variable *yoinkle_std_value_to_float(Variable *var);
 Variable *yoinkle_std_value_to_string(Variable *var);
+Variable *yoinkle_std_value_to_bool(Variable *var);
 
 Variable *yoinkle_std_get_system_time(char *format_string);
 
