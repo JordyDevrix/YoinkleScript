@@ -574,6 +574,35 @@ Variable *runtime(Node *NODE, Token *p_tokens, Node *AST) {
                 }
             }
             break;
+        case NODE_UNARY_EXPR:
+            ;
+            Variable *unary_operator = runtime(&NODE->childs[0], p_tokens, AST);
+            Variable *unary_value = runtime(&NODE->childs[1], p_tokens, AST);
+            printf("Unary operator: %s\n", p_tokens[NODE->childs[0].start_t].value);
+            printf("Unary value: %s\n", p_tokens[NODE->childs[1].start_t].value);
+
+            Variable *result_unary = malloc(sizeof(Variable));
+
+            if (unary_value->type == VAR_INT) {
+                result_unary->type = VAR_INT;
+                if (strcmp(p_tokens[NODE->childs[0].start_t].value, "-") == 0) {
+                    result_unary->value.int_value = -unary_value->value.int_value;
+                }
+            } else if (unary_value->type == VAR_FLOAT) {
+                result_unary->type = VAR_FLOAT;
+                if (strcmp(p_tokens[NODE->childs[0].start_t].value, "-") == 0) {
+                    result_unary->value.float_value = -unary_value->value.float_value;
+                }
+            } else {
+                printf(
+                    "\033[1;31m\nError at line %d: OperationError\n\tCannot perform operation of type %s\n\033[0m",
+                    p_tokens[NODE->childs[0].start_t].start,
+                    unary_value->type == VAR_INT ? "int" : unary_value->type == VAR_FLOAT ? "float" : unary_value->type == VAR_STRING ? "string" : unary_value->type == VAR_BOOLEAN ? "boolean" : "null"
+                );
+                exit(1);
+            }
+            return result_unary;
+            
             
     }
 }

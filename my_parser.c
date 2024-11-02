@@ -37,6 +37,9 @@ void print_ast_recursive(Node *AST, Token *p_tokens) {
         case NODE_BIN_EXPR:
             printf("NODE_BIN_EXPR - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
             break;
+        case NODE_UNARY_EXPR:
+            printf("NODE_UNARY_EXPR - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
+            break;
         case NODE_FUNC_CALL:
             printf("NODE_FUNC_CALL - ST:%d ET:%d CHILD:%d\n", AST->start_t, AST->end_t, AST->num_childs);
             break;
@@ -125,7 +128,7 @@ Node *parser(Token *p_tokens) {
 
         switch (p_tokens[i].type) {
             case TOKEN_IDENTIFIER:
-                // Check if next token is parenthesis
+                // Making a NODE_FUNC_CALL node if the next token is a symbol and the token after that is a parenthesis
                 if (p_tokens[i+1].type == TOKEN_SYMBOL && strcmp(p_tokens[i+1].value, "(") == 0) {
                     p_node = malloc(sizeof(Node));
                     p_node->type = NODE_FUNC_CALL;
@@ -155,6 +158,7 @@ Node *parser(Token *p_tokens) {
                         }
                     }
 
+                    // Checking if the next token is a operator or a comparator and making a NODE_BIN_EXPR or NODE_CONDITION node
                     if (p_tokens[i].type == TOKEN_OPERATOR || p_tokens[i].type == TOKEN_COMPARATOR) {
                         Node *p_expr = malloc(sizeof(Node));
                         if (p_tokens[i].type == TOKEN_OPERATOR) {
@@ -188,12 +192,13 @@ Node *parser(Token *p_tokens) {
                     p_node->end_t = i;
                     return p_node;
                 } 
-                ;
+                
                 p_node = malloc(sizeof(Node));
                 p_node->start_t = i;
                 i += 1;
                 Node *p_next = malloc(sizeof(Node));
                 p_next = parser(p_tokens);
+                
                 if ((p_next->type == NODE_ASSIGN)) {
                     p_node->type = NODE_VAR_DECL;
                     p_node->num_childs = 2;
