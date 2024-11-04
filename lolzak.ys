@@ -11,13 +11,14 @@ task fib(n) {
         i += 1;
         ## exit(0);
     };
-    return a;
+    return int(a);
 };
 
 task recursive_task(n) {
     n += 1;
     println("n: %V", n);
-    if (n < 10) {
+    delay(5);
+    if (n < 100) {
         result = recursive_task(n);
     } else {
         result = n;
@@ -28,11 +29,20 @@ task recursive_task(n) {
 task main() {
     n = 10; ## Size of the fibonacci sequence
 
+    time_start_ms = int(time("%S%s"));
+    println("Start time: %V", time_start_ms);
+
     result = fib(n);
     println("fib(%V) = %V", n, result);
 
     result = recursive_task(0);
     println("recursive_task(%V) = %V", 0, result);
+    time_end_ms = int(time("%S%s"));
+    println("End time: %V", time_end_ms);
+
+    println("Time taken: %V ms", time_end_ms - time_start_ms);
+
+    
 };
 
 main();

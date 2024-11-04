@@ -14,5 +14,6 @@ Variable *yoinkle_std_value_to_string(Variable *var);
 Variable *yoinkle_std_value_to_bool(Variable *var);
 
 Variable *yoinkle_std_get_system_time(char *format_string);
+void *yoinkle_std_delay(Variable *time);
 
 #endif

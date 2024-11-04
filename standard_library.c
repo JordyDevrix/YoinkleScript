@@ -488,6 +488,7 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
         for (int pos = 0; pos < format_string_len; pos++) {
             if (format_string[pos] == '%' && pos + 1 < format_string_len) {
                 switch (format_string[pos + 1]) {
+                    // %d - day of the month as a decimal number (01-31)
                     case 'd':
                         ;
                         time_t t = time(NULL);
@@ -509,6 +510,7 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
                         free(day);
                         free(rest);
                         break;
+                    // %m - month as a decimal number (01-12)
                     case 'm':
                         ;
                         time_t t2 = time(NULL);
@@ -530,6 +532,7 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
                         free(month);
                         free(rest2);
                         break;
+                    // %Y - year as a decimal number
                     case 'Y':
                         ;
                         time_t t3 = time(NULL);
@@ -551,6 +554,7 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
                         free(year);
                         free(rest3);
                         break;
+                    // %H - hour as a decimal number (00-23)
                     case 'H':
                         ;
                         time_t t4 = time(NULL);
@@ -572,6 +576,7 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
                         free(hour);
                         free(rest4);
                         break;
+                    // %M - minute as a decimal number (00-59)
                     case 'M':
                         ;
                         time_t t5 = time(NULL);
@@ -593,6 +598,7 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
                         free(minute);
                         free(rest5);
                         break;
+                    // %S - second as a decimal number (00-59)
                     case 'S':
                         ;
                         time_t t6 = time(NULL);
@@ -614,6 +620,30 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
                         free(second);
                         free(rest6);
                         break;
+                        // Millisecond as a decimal number (000-999)
+                    case 's':
+                        ;
+                        time_t t7 = time(NULL);
+                        struct tm tm7 = *localtime(&t7);
+                        struct timeval tv;
+                        mingw_gettimeofday(&tv, NULL);
+                        char *dest7 = malloc(pos + 1);
+                        strncpy(dest7, new_format_string, pos);
+                        dest7[pos] = '\0';
+                        char *millisecond = malloc(4);
+                        sprintf(millisecond, "%03d", (int)tv.tv_usec / 1000);
+                        char *rest7 = malloc(format_string_len - pos - 2);
+                        strncpy(rest7, new_format_string + pos + 2, format_string_len - pos - 2);
+                        rest7[format_string_len - pos - 2] = '\0';
+                        new_format_string = malloc(strlen(dest7) + 4 + strlen(rest7) + 1);
+                        strcpy(new_format_string, dest7);
+                        strcat(new_format_string, millisecond);
+                        strcat(new_format_string, rest7);
+                        format_string_len = strlen(new_format_string);
+                        free(dest7);
+                        free(millisecond);
+                        free(rest7);
+                        break;
                 }
             }   
         }
@@ -623,4 +653,12 @@ Variable *yoinkle_std_get_system_time(char *format_string) {
         new_var->value.string_value = new_format_string;
         return new_var;
     }
+}
+
+void *yoinkle_std_delay(Variable *time_in_milliseconds) {
+    // Storing start time
+    clock_t start_time = clock();
+
+    // looping till required time is not achieved
+    while (clock() < start_time + time_in_milliseconds->value.int_value);
 }
