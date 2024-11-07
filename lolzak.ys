@@ -18,7 +18,7 @@ task recursive_task(n) {
     n += 1;
     println("n: %V", n);
     delay(5);
-    if (n < 100) {
+    if (n < 10) {
         result = recursive_task(n);
     } else {
         result = n;
